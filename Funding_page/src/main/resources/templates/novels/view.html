@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${novel.title}">소설 상세 보기</title>
+</head>
+<body>
+    <h1 th:text="${novel.title}">소설 제목</h1>
+    <p><strong>카테고리:</strong> <span th:text="${novel.category}"></span></p>
+    <p><strong>설명:</strong> <span th:text="${novel.description}"></span></p>
+    <p><strong>유료 여부:</strong> <span th:text="${novel.isPaid ? '유료' : '무료'}"></span></p>
+    <a href="/novels">목록으로 돌아가기</a>
+</body>
+</html>

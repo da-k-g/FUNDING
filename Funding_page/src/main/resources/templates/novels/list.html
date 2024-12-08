@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소설 목록</title>
+</head>
+<body>
+    <h1>소설 목록</h1>
+    <ul>
+        <li th:each="novel : ${novels}">
+            <a th:href="@{/novels/{id}(id=${novel.id})}" th:text="${novel.title}"></a> - 
+            <span th:text="${novel.category}"></span> - 
+            <span th:text="${novel.isPaid ? '유료' : '무료'}"></span>
+            <a th:href="@{/novels/modify/{id}(id=${novel.id})}">수정</a>
+            <form th:action="@{/novels/delete/{id}(id=${novel.id})}" method="post" style="display: inline;">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                <button type="submit">삭제</button>
+            </form>
+            <!-- 회차 목록 보기 버튼 -->
+            <a th:href="@{/chapters/{novelId}(novelId=${novel.id})}">회차 목록 보기</a>
+        </li>
+    </ul>
+    <button><a href="/novels/new">소설 등록</a></button> 
+</body>
+</html>

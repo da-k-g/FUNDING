@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project Details</title>
+</head>
+<body>
+    <h1 th:text="${project.title}"></h1>
+    <p th:text="${project.description}"></p>
+    <p>Goal: <span th:text="${project.goal}"></span></p>
+    <p>Current Funding: <span th:text="${project.currentFunding}"></span></p>
+    <a th:href="@{/projects/{id}/fund(id=${project.id})}">Fund this Project</a>
+    <a href="/projects">Back to Projects</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회차 등록</title>
+</head>
+<body>
+    <h1 th:text="'소설: ' + ${chapter.novel.title}"></h1>
+    <h2>회차 등록</h2>
+    <form th:action="@{/chapters/{novelId}(novelId=${chapter.novel.id})}" method="post">
+        <div>
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" th:value="${chapter.title}" required>
+        </div>
+        <div>
+            <label for="content">내용</label>
+            <textarea id="content" name="content" th:text="${chapter.content}" required></textarea>
+        </div>
+        <div>
+            <label for="isPaid">유료 여부</label>
+            <select id="isPaid" name="isPaid">
+                <option value="false" th:selected="!${chapter.isPaid}">무료</option>
+                <option value="true" th:selected="${chapter.isPaid}">유료</option>
+            </select>
+        </div>
+        <button type="submit">등록</button>
+        <a th:href="@{/chapters/{novelId}(novelId=${chapter.novel.id})}">취소</a>
+    </form>
+</body>
+</html>

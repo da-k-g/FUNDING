@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+<head>
+<meta charset="UTF-8">
+<title>Q&A 목록</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Q&A 목록</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>작업</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="qna : ${qnaList}">
+                <td th:text="${qna.id}"></td>
+                <td th:text="${qna.title}"></td>
+                <td th:text="${qna.author.username}"></td>
+                <td th:text="${#temporals.format(qna.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <a th:if="${currentUserEmail != null and qna.author.email == currentUserEmail}" th:href="@{/qna/edit(id=${qna.id})}">수정</a>
+                    <a th:if="${currentUserEmail != null and qna.author.email == currentUserEmail}" th:href="@{/qna/delete(id=${qna.id})}" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <a href="/qna/new">질문 작성</a>
+    <script src="/js/script.js"></script>
+</body>
+</html>
