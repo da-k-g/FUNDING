@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 실패</title>
+</head>
+<body>
+    <h1>결제가 실패했습니다.</h1>
+    <p th:text="${message}"></p>
+    <a th:href="@{/funding/{projectId}(projectId=${projectId})}">다시 시도하기</a>
+</body>
+</html>
