@@ -27,5 +27,8 @@ public class QnA {
 
     @Column(nullable = false)
     private LocalDateTime createDate = LocalDateTime.now();
+    
+    @Column(columnDefinition = "CLOB") // 답변 필드
+    private String answer;
 }
 

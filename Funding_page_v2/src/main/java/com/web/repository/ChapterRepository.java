@@ -10,7 +10,8 @@ import java.util.List;
 public interface ChapterRepository extends CrudRepository<Chapter, Long> {
     List<Chapter> findByNovelAndIsPaid(Novel novel, boolean isPaid); // 유료/무료
 
-	Object findByNovelId(Long novelId);
+    List<Chapter> findByNovelId(Long novelId);
+
 
 	List<Chapter> findByNovel(Novel novel);
 }

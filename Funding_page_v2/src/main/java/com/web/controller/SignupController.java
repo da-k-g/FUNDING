@@ -32,6 +32,6 @@ public class SignupController {
             return "signup";
         }
         userService.saveUser(userForm);
-        return "/login";
+        return "redirect:/login";
     }
 }

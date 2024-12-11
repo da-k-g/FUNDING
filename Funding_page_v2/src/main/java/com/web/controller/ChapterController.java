@@ -1,6 +1,9 @@
 package com.web.controller;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +37,8 @@ public class ChapterController {
     }
 
     // 회차 등록 처리
-    @PostMapping("/{novelId}")
+ // 회차 등록 처리
+    @PostMapping("/{novelId}/new")
     public String createChapter(@PathVariable Long novelId, @ModelAttribute Chapter chapter) {
         Novel novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid novel Id: " + novelId));
@@ -43,15 +47,18 @@ public class ChapterController {
         return "redirect:/chapters/" + novelId; // 회차 목록 페이지로 리다이렉트
     }
 
+
     // 회차 목록 보기
     @GetMapping("/{novelId}")
     public String listChapters(@PathVariable Long novelId, Model model) {
         Novel novel = novelRepository.findById(novelId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid novel Id: " + novelId));
+        List<Chapter> chapters = chapterRepository.findByNovel(novel);
         model.addAttribute("novel", novel);
-        model.addAttribute("chapters", chapterRepository.findByNovel(novel));
-        return "chapters/list"; // 회차 목록 페이지 템플릿
+        model.addAttribute("chapters", chapters != null ? chapters : new ArrayList<>());
+        return "chapters/list";
     }
+
 
     // 회차 수정 폼
     @GetMapping("/modify/{chapterId}")

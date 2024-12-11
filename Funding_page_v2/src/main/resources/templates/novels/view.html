@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <title th:text="${novel.title}">소설 상세 보기</title>
 </head>
 <body>
@@ -10,6 +12,73 @@
     <p><strong>카테고리:</strong> <span th:text="${novel.category}"></span></p>
     <p><strong>설명:</strong> <span th:text="${novel.description}"></span></p>
     <p><strong>유료 여부:</strong> <span th:text="${novel.isPaid ? '유료' : '무료'}"></span></p>
+
+    <!-- 좋아요 버튼 -->
+    <div>
+        <button type="button" class="like-button" th:data-action="add" th:data-novel-id="${novel.id}">Like</button>
+        <button type="button" class="like-button" th:data-action="remove" th:data-novel-id="${novel.id}">Unlike</button>
+    </div>
+    <p>Likes: <span id="like-count" th:text="${novel.likeCount}">0</span></p>
+
     <a href="/novels">목록으로 돌아가기</a>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<script>
+    const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+    const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
+
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, () => {
+        const novelId = document.querySelector(".like-button").dataset.novelId;
+
+        // WebSocket 구독
+        stompClient.subscribe(`/topic/novels/${novelId}`, (message) => {
+            document.getElementById("like-count").textContent = message.body;
+        });
+
+        // 페이지 로드 시 초기 likeCount 요청
+        fetch(`/novels/${novelId}/likeCount`, {
+            method: "GET",
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("like-count").textContent = data.likeCount;
+        })
+        .catch(error => console.error("Failed to fetch initial likeCount:", error));
+    });
+
+    document.querySelectorAll(".like-button").forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const action = this.dataset.action; // 'add' 또는 'remove'
+            const novelId = this.dataset.novelId;
+            const url = `/novels/${novelId}/like/${action}`;
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to process like/unlike action");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error.message);
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

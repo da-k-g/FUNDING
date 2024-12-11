@@ -7,42 +7,56 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.web.service.CustomOAuth2UserService;
+
 @Configuration
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 권한 설정
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/signup", "/css/**", "/js/**").permitAll() // 비인증 경로
-                .requestMatchers("/qna", "/qna/**").authenticated() // QnA는 인증된 사용자만
-                .requestMatchers("/payments/**").authenticated() // 결제는 인증된 사용자만
-                .anyRequest().authenticated() // 나머지는 인증 필요
+                .requestMatchers("/", "/login", "/signup", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/novels/*/like/*").authenticated()
+                .anyRequest().authenticated()
             )
-            // 로그인 설정
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/perform_login")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/dashboard", true)
+                .failureUrl("/login?error=true")
                 .permitAll()
             )
-            // 로그아웃 설정
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .defaultSuccessUrl("/dashboard", true)
+                .failureUrl("/login?error=true")
+                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+            )
             .logout(logout -> logout
                 .logoutUrl("/perform_logout")
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
-            // CSRF 설정
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/payments/**", "/qna/**") // 결제와 QnA 관련 요청은 CSRF 보호 비활성화
+                .ignoringRequestMatchers(
+                    "/novels/*/like/*", "/perform_login", "/oauth2/**"
+                )
             );
 
         return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(10);
     }
 }

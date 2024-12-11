@@ -4,6 +4,8 @@ import com.web.domain.QnA;
 import com.web.domain.User;
 import com.web.repository.QnARepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,5 +40,9 @@ public class QnAService {
 
     public void deleteById(Long id) {
         qnaRepository.deleteById(id);
+    }
+ // 페이징 처리
+    public Page<QnA> findPaginated(Pageable pageable) {
+        return qnaRepository.findAll(pageable);
     }
 }

@@ -2,13 +2,115 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Project Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            margin: 20px;
+        }
+
+        .image-container {
+            flex: 1;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .details-container {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 25px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            line-height: 25px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #008cba;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        a:hover {
+            background-color: #005f7f;
+        }
+    </style>
 </head>
 <body>
-    <h1 th:text="${project.title}"></h1>
-    <p th:text="${project.description}"></p>
-    <p>Goal: <span th:text="${project.goal}"></span></p>
-    <p>Current Funding: <span th:text="${project.currentFunding}"></span></p>
-    <a th:href="@{/projects/{id}/fund(id=${project.id})}">Fund this Project</a>
-    <a href="/projects">Back to Projects</a>
+    <div class="container">
+        <!-- 이미지 영역 -->
+        <div class="image-container">
+            <img th:src="@{${project.imagePath}}" alt="프로젝트 이미지">
+        </div>
+
+        <!-- 프로젝트 세부 정보 -->
+        <div class="details-container">
+            <h1 th:text="${project.title}"></h1>
+            <p>Goal: <span th:text="${project.goal}"></span>원</p>
+            <p>Current Funding: <span th:text="${project.currentFunding}"></span>원</p>
+            <p>Created by: <span th:text="${project.createdBy}"></span></p>
+            <p>시작 날짜: <span th:text="${project.startDate}"></span></p>
+            <p>종료 날짜: <span th:text="${project.endDate}"></span></p>
+
+            <!-- Progress bar -->
+            <div class="progress-container">
+                <p>Progress:</p>
+                <div class="progress-bar-wrapper">
+                    <div 
+                        class="progress-bar" 
+                        th:style="'width: ' + (${project.currentFunding} / ${project.goal}) * 100 + '%'">
+                        <span th:text="${T(java.lang.Math).round((project.currentFunding * 1.0 / project.goal) * 100)} + '%'"></span>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- 버튼 -->
+            <a th:href="@{/projects/{id}/fund(id=${project.id})}">Fund this Project</a>
+            <a href="/projects">Back to Projects</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -19,8 +19,15 @@
             </form>
             <!-- 회차 목록 보기 버튼 -->
             <a th:href="@{/chapters/{novelId}(novelId=${novel.id})}">회차 목록 보기</a>
+
+            <!-- 회차 추가 버튼 -->
+            <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}">
+                <button type="button">회차 추가</button>
+            </a>
         </li>
     </ul>
-    <button><a href="/novels/new">소설 등록</a></button> 
+
+    <!-- 소설 등록 버튼 -->
+    <button><a href="/novels/new">소설 등록</a></button>
 </body>
 </html>

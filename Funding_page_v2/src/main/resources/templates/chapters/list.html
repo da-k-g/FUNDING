@@ -6,19 +6,37 @@
     <title>회차 목록</title>
 </head>
 <body>
-    <h1 th:text="'소설: ' + ${novel.title}"></h1>
+    <!-- 소설 제목 -->
+    <h1 th:text="'소설: ' + ${novel?.title}"></h1>
+    
     <h2>회차 목록</h2>
+
+    <!-- 회차 목록 -->
     <ul>
+        <!-- 회차가 비어 있는 경우 처리 -->
+        <li th:if="${#lists.isEmpty(chapters)}">등록된 회차가 없습니다.</li>
+
+        <!-- 회차가 있는 경우 처리 -->
         <li th:each="chapter : ${chapters}">
-            <a th:href="@{/chapters/edit/{id}(id=${chapter.id})}" th:text="${chapter.title}"></a> - 
-            <span th:text="${chapter.isPaid ? '유료' : '무료'}"></span>
-            <form th:action="@{/chapters/delete/{id}(id=${chapter.id})}" method="post" style="display: inline;">
+            <a th:text="${chapter?.title}">-</a>
+            <span th:text="${chapter?.isPaid ? '유료' : '무료'}"></span>
+            <form th:action="@{/chapters/delete/{id}(id=${chapter?.id})}" method="post" style="display: inline;">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                 <button type="submit">삭제</button>
             </form>
         </li>
     </ul>
-    <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}">회차 추가</a>
+
+    <!-- 회차 추가 버튼 -->
+    <a th:href="@{/chapters/{novelId}/new(novelId=${novel?.id})}">
+        <button type="button">회차 추가</button>
+    </a>
+
+    <!-- 수정 버튼 -->
+    <a th:if="${not #lists.isEmpty(chapters)}" 
+       th:href="@{/chapters/modify/{id}(id=${chapters[0]?.id})}">수정</a>
+
+    <!-- 소설 목록으로 이동 -->
     <a th:href="@{/novels}">소설 목록으로</a>
 </body>
 </html>

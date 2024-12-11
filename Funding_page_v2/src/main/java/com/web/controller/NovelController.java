@@ -2,6 +2,11 @@ package com.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,8 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.web.domain.Chapter;
 import com.web.domain.Novel;
+import com.web.domain.User;
 import com.web.repository.ChapterRepository;
 import com.web.repository.NovelRepository;
+import com.web.repository.UserRepository;
+import com.web.service.LikeService;
 
 import jakarta.validation.Valid;
 
@@ -19,6 +27,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -27,12 +37,21 @@ public class NovelController {
 
     @Autowired
     private NovelRepository novelRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ChapterRepository chapterRepository;
 
     @Value("${file.upload-dir}") // 업로드 디렉토리 설정
     private String uploadDir;
+    
+    @Autowired
+    private LikeService likeService;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate; // WebSocket 메시지 전송을 위한 객체
 
     // 업로드 디렉토리 경로 보정
     private String getUploadDirectory() {
@@ -147,6 +166,81 @@ public class NovelController {
         novelRepository.save(novel);
         return "redirect:/novels";
     }
+    
+    @PostMapping("/{id}/like/add")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> addLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null) {
+            response.put("error", "User not authenticated");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        User user = userRepository.findByEmail(userDetails.getUsername());
+        if (user == null) {
+            response.put("error", "User not found");
+            return ResponseEntity.status(404).body(response);
+        }
+
+        try {
+            likeService.addLike(user, id);
+            long likeCount = likeService.getLikeCount(id);
+            response.put("likeCount", likeCount);
+
+            // WebSocket 메시지 전송
+            messagingTemplate.convertAndSend("/topic/novels/" + id, likeCount);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalStateException e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(409).body(response);
+        }
+    }
+
+    @PostMapping("/{id}/like/remove")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> removeLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (userDetails == null) {
+            response.put("error", "User not authenticated");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        User user = userRepository.findByEmail(userDetails.getUsername());
+        if (user == null) {
+            response.put("error", "User not found");
+            return ResponseEntity.status(404).body(response);
+        }
+
+        try {
+            likeService.removeLike(user, id);
+            long likeCount = likeService.getLikeCount(id);
+            response.put("likeCount", likeCount);
+
+            // WebSocket 메시지 전송
+            messagingTemplate.convertAndSend("/topic/novels/" + id, likeCount);
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalStateException e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(409).body(response);
+        }
+    }
+
+
+    @GetMapping("/{id}/likeCount")
+    @ResponseBody
+    public Map<String, Object> getLikeCount(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("likeCount", likeService.getLikeCount(id));
+        return response;
+    }
+
+
+
+ 
 
     // 소설 삭제 처리
     @PostMapping("/delete/{id}")

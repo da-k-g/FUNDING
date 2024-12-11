@@ -42,10 +42,26 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        System.out.println("User found: " + user.getEmail()); // 로그 추가
+        System.out.println("Password from DB: " + user.getPassword());
+        System.out.println("Encoded password: " + user.getPassword()); // 비밀번호 확인
+        System.out.println("Role: " + user.getRole()); // 역할 확인
+        String role = user.getRole().startsWith("ROLE_") ? user.getRole() : "ROLE_" + user.getRole();
+
+        
+        
         return new org.springframework.security.core.userdetails.User(
             user.getEmail(),
             user.getPassword(),
-            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+            Collections.singletonList(new SimpleGrantedAuthority(role))
         );
     }
+    public void registerUser(User user) {
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
+    
 }
