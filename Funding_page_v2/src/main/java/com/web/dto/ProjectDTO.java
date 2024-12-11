@@ -1,6 +1,7 @@
 package com.web.dto;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class ProjectDTO {
 
@@ -11,10 +12,12 @@ public class ProjectDTO {
     private int currentFunding;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String imagePath;
+    private String createdBy;
 
     public ProjectDTO() {}
 
-    public ProjectDTO(Long id, String title, String description, int goal, int currentFunding, LocalDate startDate, LocalDate endDate) {
+    public ProjectDTO(Long id, String title, String description, int goal, int currentFunding, LocalDate startDate, LocalDate endDate, String imagePath, String createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -22,6 +25,25 @@ public class ProjectDTO {
         this.currentFunding = currentFunding;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.imagePath = imagePath;
+        this.createdBy = createdBy;
+    }
+    
+ // Getter and Setter for createdBy
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     // Getters and Setters
@@ -79,5 +101,8 @@ public class ProjectDTO {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+    public long getDaysLeft() {
+        return ChronoUnit.DAYS.between(LocalDate.now(), endDate);
     }
 }

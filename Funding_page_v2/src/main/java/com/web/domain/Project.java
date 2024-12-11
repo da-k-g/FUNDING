@@ -21,8 +21,29 @@ public class Project {
     private LocalDate startDate;
 
     private LocalDate endDate;
+    
+    private String imagePath;
+    
+    private String createdBy;
 
     public Project() {}
+    
+    // Getter and Setter for createdBy
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     // Getters and Setters
     public Long getProjectId() { // 메서드 이름 수정
