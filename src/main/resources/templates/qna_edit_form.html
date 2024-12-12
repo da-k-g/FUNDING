@@ -1,0 +1,31 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Q&A 수정</title>
+<link rel="stylesheet" href="/css/qna_edit.css">
+</head>
+<body>
+    <div class="container">
+        <h1>질문 수정</h1>
+        <form action="/qna/update" method="post">
+            <input type="hidden" name="id" th:value="${qna.id}">
+            
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" th:value="${qna.title}" placeholder="제목을 입력하세요" required>
+
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="5" placeholder="내용을 입력하세요" required th:text="${qna.content}"></textarea>
+
+            <label for="author">작성자</label>
+            <input type="text" id="author" name="author" th:value="${qna.author}" placeholder="작성자를 입력하세요" required>
+
+            <button type="submit">수정</button>
+        </form>
+    </div>
+</body>
+</html>

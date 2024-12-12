@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'소설 수정 - ' + ${novel.title}">소설 수정</title>
+</head>
+<body>
+    <h1 th:text="'소설 수정 - ' + ${novel.title}">소설 수정</h1>
+
+    <!-- 유효성 검증 에러 메시지 -->
+    <div th:if="${errors}">
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+        </ul>
+    </div>
+
+    <!-- 소설 수정 폼 -->
+    <form th:action="@{/novels/modify/{id}(id=${novel.id})}" method="post">
+        <!-- CSRF 보호 -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+        <!-- 제목 -->
+        <div>
+            <label for="title">소설 제목:</label>
+            <input type="text" id="title" name="title" th:value="${novel.title}" required>
+        </div>
+
+        <!-- 카테고리 -->
+        <div>
+            <label for="category">카테고리:</label>
+            <input type="text" id="category" name="category" th:value="${novel.category}" required>
+        </div>
+
+        <!-- 설명 -->
+        <div>
+            <label for="description">설명:</label>
+            <textarea id="description" name="description" th:text="${novel.description}" required></textarea>
+        </div>
+
+        <!-- 유료 여부 -->
+        <div>
+            <label for="isPaid">유료 여부:</label>
+            <select id="isPaid" name="isPaid">
+                <option value="false" th:selected="!${novel.isPaid}">무료</option>
+                <option value="true" th:selected="${novel.isPaid}">유료</option>
+            </select>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <div>
+            <button type="submit">수정 완료</button>
+            <a href="/novels">취소</a>
+        </div>
+    </form>
+</body>
+</html>

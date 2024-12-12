@@ -1,0 +1,91 @@
+/* Reset and base styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff9e6; /* Soft yellow background */
+    color: #333; /* Neutral text color */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Main heading */
+h1 {
+    text-align: center;
+    color: #f5a623; /* Bright yellow-orange for headings */
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Centered container */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff; /* White background for the form */
+    padding: 20px 30px; /* Adjusted padding for balanced spacing */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Form labels */
+label {
+    display: block;
+    margin-top: 20px; /* Consistent top spacing */
+    font-weight: bold;
+    color: #444; /* Darker gray for labels */
+}
+
+/* Input and textarea fields */
+input, textarea {
+    width: calc(100% - 20px); /* Adjusted width for consistent alignment */
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px; /* Balanced spacing between elements */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fefefe; /* Slightly off-white background for input fields */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Prevent textarea from being resized */
+textarea {
+    resize: none;
+    height: 100px; /* Set default height for textarea */
+}
+
+/* Submit button */
+button {
+    width: 100%; /* Full width button */
+    padding: 12px;
+    background: #f5a623; /* Bright yellow-orange */
+    color: white; /* White text for contrast */
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Button hover state */
+button:hover {
+    background: #d48821; /* Darker orange for hover */
+}
+
+/* Return link styling */
+.return-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #f5a623; /* Same as the main theme color */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.return-link:hover {
+    color: #d48821; /* Darker color on hover */
+    text-decoration: underline;
+}

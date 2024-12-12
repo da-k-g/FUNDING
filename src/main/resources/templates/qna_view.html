@@ -1,0 +1,41 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Q&A 상세 보기</title>
+<link rel="stylesheet" href="/css/qna_view.css">
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${qna.title}">제목</h1>
+        <div class="details">
+            <p><strong>작성자:</strong> <span th:text="${qna.author}">작성자</span></p>
+            <p><strong>작성일:</strong> <span th:text="${#temporals.format(qna.createDate, 'yyyy-MM-dd HH:mm')}">작성일</span></p>
+        </div>
+        <p class="content"><strong>내용:</strong></p>
+        <p th:text="${qna.content}">내용</p>
+        <hr class="divider">
+        <!-- 답글 표시 -->
+        <div class="answer">
+            <h2>답변</h2>
+            <p th:if="${qna.answer != null}" th:text="${qna.answer}">답변이 없습니다</p>
+            <p th:if="${qna.answer == null}">아직 답변이 없습니다</p>
+        </div>
+        <hr class="divider">
+        <!-- 답글 달기 폼 -->
+        <div class="add-answer">
+            <h2>답변 달기</h2>
+            <form action="/qna/answer" method="post">
+                <input type="hidden" name="id" th:value="${qna.id}">
+                <textarea name="answer" rows="5" placeholder="답변 내용 작성"></textarea>
+                <button type="submit">답변 등록</button>
+            </form>
+        </div>
+        <a href="/qna" class="return-link">목록으로 돌아가기</a>
+    </div>
+</body>
+</html>

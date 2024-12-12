@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Funding Payment</title>
+</head>
+<body>
+    <h1>펀딩 결제</h1>
+    <input type="hidden" id="projectId" value="[[${projectId}]]" />
+    <input type="hidden" id="title" value="[[${title}]]" />
+    <label for="amount">금액:</label>
+    <input type="number" id="amount" placeholder="금액을 입력하세요" />
+    <button id="payButton" onclick="requestPay()">결제하기</button>
+
+    <script>
+        var projectId = "[[${projectId}]]"; // Thymeleaf를 통해 서버에서 projectId 전달
+        var projectTitle = "[[${title}]]"; // 프로젝트 제목 전달
+
+        function requestPay() {
+            var IMP = window.IMP;
+            IMP.init("imp72705242");
+
+            var amount = document.getElementById('amount').value; // 결제 금액
+            if (!amount || amount <= 0) {
+                alert("결제 금액을 입력하세요.");
+                return;
+            }
+
+            IMP.request_pay({
+                pg: "kakaopay.TC0ONETIME",
+                pay_method: "card",
+                merchant_uid: "merchant_" + new Date().getTime(),
+                name: projectTitle, // 프로젝트 제목을 결제 이름으로 설정
+                amount: amount, // 입력한 금액
+                buyer_email: "test@naver.com",
+                buyer_name: "테스트 사용자",
+                buyer_tel: "010-1234-5678",
+                buyer_addr: "서울특별시",
+                buyer_postcode: "123-456"
+            }, function (rsp) {
+                if (rsp.success) {
+                    if (!rsp.imp_uid) {
+                        alert("결제 인증 정보가 누락되었습니다.");
+                        return;
+                    }
+
+                    fetch('/funding/confirm', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            projectId: projectId, // 프로젝트 ID
+                            userId: "test_user_id", // 테스트 사용자 ID
+                            amount: rsp.paid_amount, // 결제 금액
+                            merchantUid: rsp.merchant_uid, // 결제 고유 ID
+                            impUid: rsp.imp_uid // 아임포트 결제 UID
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            alert("결제가 성공적으로 처리되었습니다.");
+                            location.href = "/funding/success?projectId=" + projectId;
+                        } else {
+                            response.text().then(text => {
+                                alert("결제 처리 오류: " + text);
+                            });
+                        }
+                    }).catch(error => {
+                        console.error("결제 요청 실패:", error);
+                        alert("결제 요청 중 오류가 발생했습니다.");
+                    });
+                } else {
+                    alert("결제 실패: " + rsp.error_msg);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

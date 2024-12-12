@@ -1,0 +1,80 @@
+/* Reset and base styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff9e6; /* Light yellow background */
+    color: #333; /* Neutral text color */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Heading styles */
+h1 {
+    text-align: center;
+    color: #f5a623; /* Bright yellow-orange for heading */
+    margin: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Centered container */
+.container {
+    max-width: 600px; /* Restrict width for better alignment */
+    margin: 50px auto; /* Center container vertically and horizontally */
+    background: #ffffff; /* White background for better readability */
+    padding: 20px 30px; /* Add padding for spacing */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+/* Form labels */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #444; /* Darker gray for better contrast */
+}
+
+/* Input and textarea fields */
+input, textarea {
+    width: calc(100% - 20px); /* Ensure full width with padding */
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px; /* Add consistent spacing between inputs */
+    border: 1px solid #ccc; /* Light gray border for inputs */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fefefe; /* Slightly off-white background for fields */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+
+/* Prevent textarea from being resized */
+textarea {
+    resize: none; /* Disable resizing */
+    height: 100px; /* Set a default height for textarea */
+}
+
+/* Submit button */
+button {
+    width: 100%; /* Full width button */
+    padding: 12px;
+    background: #f5a623; /* Bright yellow-orange */
+    color: white; /* White text for better contrast */
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth hover transition */
+}
+
+/* Button hover state */
+button:hover {
+    background: #d48821; /* Darker orange for hover */
+}
+
+/* Add balanced spacing for bottom elements */
+.container:last-child {
+    margin-bottom: 20px;
+}
