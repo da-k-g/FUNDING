@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>펀딩하기</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script>
+        var IMP = window.IMP; 
+        IMP.init("imp72705242");
+
+        function requestPay() {
+            const projectId = document.getElementById("projectId").value;
+            const userId = document.getElementById("userId").value;
+            const amount = document.getElementById("amount").value;
+            console.log("Project ID:", projectId);
+            console.log("User ID (Email):", userId);
+            console.log("Amount:", amount);
+
+            if (!amount || amount <= 0) {
+                alert("펀딩 금액을 올바르게 입력하세요.");
+                return;
+            }
+
+            if (!projectId) {
+                alert("프로젝트 정보를 찾을 수 없습니다.");
+                return;
+            }
+
+            if (!userId) {
+                alert("로그인이 필요합니다.");
+                return;
+            }
+
+            // 결제 방식 선택
+            const fundingMethod = document.querySelector('input[name="fundingMethod"]:checked').value;
+
+            if (fundingMethod === "payment") {
+                // 결제 요청
+                IMP.request_pay({
+                    pg: "kakaopay.TC0ONETIME",
+                    pay_method: "card",
+                    merchant_uid: "merchant_" + new Date().getTime(),
+                    name: "프로젝트 펀딩",
+                    amount: amount,
+                }, function (rsp) {
+                    if (rsp.success) {
+                        processPayment(rsp.imp_uid, projectId, amount, userId);
+                    } else {
+                        alert("결제 실패: " + rsp.error_msg);
+                    }
+                });
+            } else if (fundingMethod === "points") {
+                // 포인트로 펀딩
+                fundWithPoints(projectId, amount, userId);
+            }
+        }
+
+        function processPayment(impUid, projectId, amount, userId) {
+            fetch(`/payments/verify/${impUid}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    projectId: projectId,
+                    amount: amount,
+                    userId: userId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("결제가 성공적으로 완료되었습니다.");
+                    updateProjectFunding(projectId);
+                } else {
+                    alert(data.message || "결제 검증 실패");
+                }
+            });
+        }
+        function fundWithPoints(projectId, amount, userId) {
+            fetch('/funding/fund-with-points', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    projectId: projectId,
+                    amount: amount,
+                    email: userId // userId를 email로 사용
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("포인트 펀딩 성공!");
+                    updateProjectFunding(projectId);
+                } else {
+                    alert(data.message || "포인트 펀딩 실패");
+                }
+            })
+            .catch(error => console.error("포인트 펀딩 오류:", error));
+        }
+
+
+        function updateProjectFunding(projectId) {
+            fetch(`/projects/${projectId}`)
+                .then(response => response.json())
+                .then(projectData => {
+                    document.getElementById("currentFunding").textContent = projectData.currentFunding;
+                })
+                .catch(error => console.error("데이터 갱신 오류:", error));
+        }
+    </script>
+</head>
+<body>
+    <h1>펀딩하기</h1>
+    <input type="hidden" id="userId" th:value="${userId}">
+    <input type="hidden" id="projectId" th:value="${projectId}">
+    
+    <label for="amount">펀딩 금액:</label>
+    <input type="number" id="amount" name="amount" required>
+    <br>
+
+    <label>펀딩 방식:</label>
+    <input type="radio" id="paymentMethod" name="fundingMethod" value="payment" checked>
+    <label for="paymentMethod">결제</label>
+    <input type="radio" id="pointsMethod" name="fundingMethod" value="points">
+    <label for="pointsMethod">포인트</label>
+    <br>
+
+    <button type="button" onclick="requestPay()">펀딩하기</button>
+    
+    <br>
+    <a th:href="@{/projects/{id}(id=${projectId})}">프로젝트로 돌아가기</a>
+</body>
+</html>
