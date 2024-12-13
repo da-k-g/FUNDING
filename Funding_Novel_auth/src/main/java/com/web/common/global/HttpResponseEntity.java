@@ -1,11 +1,11 @@
 package com.web.common.global;
 
 public class HttpResponseEntity {
-
+            //서버에서 클라이언트로 표준화된 형식으로 응답 객체를 생성
     public static class ResponseResult<T> {
-        private boolean success;
-        private String message;
-        private T data;
+        private boolean success;		// 성공여부 
+        private String message;			// 응답 메세지
+        private T data;					// 요청 처리 데이터
 
         public ResponseResult(boolean success, String message, T data) {
             this.success = success;
