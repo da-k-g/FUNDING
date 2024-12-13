@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>펀딩하기</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script>
+        var IMP = window.IMP; 
+        IMP.init("imp72705242");
+        function requestPay() {
+           
+            const userId = document.getElementById("userId").value;
+
+            // 입력된 충전 금액 가져오기
+            const amount = document.getElementById("amount").value;
+
+            // 입력 값 검증
+            if (!amount || amount <= 0) {
+                alert("충전 금액을 올바르게 입력하세요.");
+                return;
+            }
+
+
+            if (!userId) {
+                alert("로그인이 필요합니다.");
+                return;
+            }
+
+            // 결제 요청
+            IMP.request_pay({
+                pg: "kakaopay.TC0ONETIME",
+                pay_method: "card",
+                merchant_uid: "merchant_" + new Date().getTime(),
+                name: "프로젝트 펀딩",
+                amount: amount,
+            }, function (rsp) {
+                if (rsp.success) {
+                    fetch(`/payments/verify/${rsp.imp_uid}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            projectId: projectId,
+                            amount: amount,
+                            userId: userId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            alert("결제가 성공적으로 완료되었습니다.");
+                            // 최신 데이터 갱신
+                            fetch(`/projects/${projectId}`)
+                                .then(response => response.json())
+                                .then(projectData => {
+                                    document.getElementById("currentFunding").textContent = projectData.currentFunding;
+                                })
+                                .catch(error => console.error("데이터 갱신 오류:", error));
+                        } else {
+                            alert(data.message || "결제 검증 실패");
+                        }
+                    });
+                } else {
+                    alert("결제 실패: " + rsp.error_msg);
+                }
+            });
+        }
+
+
+
+
+    </script>
+</head>
+<body>
+    <h1>펀딩하기</h1>
+    <input type="hidden" id="userId" th:value="${userId}">
+    <label for="amount">충전 금액:</label>
+    <input type="number" id="amount" name="amount" required>
+    <button type="button" onclick="requestPay()">결제하기</button>
+    
+</body>
+</html>

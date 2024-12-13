@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>펀딩 참여</title>
+</head>
+<body>
+    <h1 th:text="${project.title}">프로젝트 제목</h1>
+    <p>목표 금액: <span th:text="${project.goal}"></span>원</p>
+    <p>현재 모금액: <span th:text="${project.current}"></span>원</p>
+
+    <h2>펀딩 참여</h2>
+    <form action="/funding/participate" method="post">
+        <input type="hidden" name="projectId" th:value="${project.projectId}">
+        <input type="text" name="userId" placeholder="사용자 ID" required>
+        <input type="number" name="amount" placeholder="금액" required min="1">
+        <button type="submit">펀딩하기</button>
+    </form>
+</body>
+</html>
