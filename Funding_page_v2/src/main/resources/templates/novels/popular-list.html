@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/layout1}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인기소설 목록</title>
+<script src="/js/banner.js" defer></script>
+<link rel="stylesheet" href="/css/novels/novel-list.css" />
+</head>
+
+<div layout:fragment="content" class="container">
+	<h1>인기 작품</h1>
+
+	<!-- 배너 영역 -->
+	<div class="banner-container">
+	<!-- 개별 배너 항목 -->
+		<div class="banner-wrapper">
+			<div class="banner-item">
+				<img th:src="@{/img/20241209_150932.png}"/> <!-- 배너 이미지 -->
+				<div class="banner-text">최애를 위해 아이돌이 되었다</div> <!--  배너 텍스트 -->
+			</div>
+			<div class="banner-item">
+				<img th:src="@{/img/20241212_090838.jpg}"/>
+				<div class="banner-text">모두에게 공평한 조회수 20원의 빛!</div>
+			</div>
+			<div class="banner-item">
+				<img th:src="@{/img/20241212_115553.jpg}"/>
+				<div class="banner-text">모두에게 공평한 조회수 20원의 빛!</div>
+			</div>
+		</div>
+		<!-- 배너 이동 컨트롤 버튼 -->
+		<button class="prev">&lt;</button>
+		<button class="next">&gt;</button>
+	</div>
+
+
+
+	<!-- CSRF 토큰 -->
+	<input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+
+	<!-- 신작순 섹션 -->
+	<div class="more-title">
+		<h2>신작순</h2>
+		<button type="button" class="btn-more" onclick="locationAction(event)"
+			th:href="@{/novels/popular/createDateDesc}">더보기</button>
+	</div>
+
+	<ul class="novel-list">
+		<li th:each="novel : ${createDateDescNovels}"><a
+			th:href="@{/novels/{id}(id=${novel.id})}"><img
+				th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}"></a>
+
+			<h2 th:text="${novel.title}"></h2>
+			<p th:text="${novel.category}"></p>
+			<div class="isPaid-view">
+				<span th:text="${novel.isPaid ? '유료' : '무료'}"
+					th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+				<span> <i class="fa fa-eye" title="조회수"
+					data-original-title="조회수"></i>&nbsp;<span
+					th:text="${novel.viewCount}"></span>
+				</span>
+			</div>
+			<div class="actions">
+				<a th:href="@{/novels/{id}(id=${novel.id})}" class="details">자세히
+					보기</a>
+				<div sec:authorize="hasAuthority('ROLE_ADMIN')">
+					<a th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit">수정</a>
+					<button type="button" class="delete" onclick="deleteNovel(event)"
+						th:data-id="${novel.id}">삭제</button>
+				</div>
+			</div>
+			<div class="extra-actions">
+				<a th:href="@{/chapters/{novelId}(novelId=${novel.id})}" class="button">회차 목록
+					보기</a> <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}"
+					sec:authorize="hasAuthority('ROLE_ADMIN')" class="admin-link">회차 추가</a>
+			</div></li>
+	</ul>
+
+
+	<div class="more-title">
+		<h2>좋아요순</h2>
+		<button type="button" class="btn-more" onclick="locationAction(event)"
+			th:href="@{/novels/popular/likeScoreDesc}">더보기</button>
+	</div>
+	<ul class="novel-list">
+		<li th:each="novel : ${likeScoreDescNovels}"><a
+			th:href="@{/novels/{id}(id=${novel.id})}"><img
+				th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}"></a>
+
+			<h2 th:text="${novel.title}"></h2>
+			<p th:text="${novel.category}"></p>
+			<div class="isPaid-view">
+				<span th:text="${novel.isPaid ? '유료' : '무료'}"
+					th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+				<span> <i class="fa fa-eye" title="조회수"
+					data-original-title="조회수"></i>&nbsp;<span
+					th:text="${novel.viewCount}"></span>
+				</span>
+			</div>
+			<div class="actions">
+				<a th:href="@{/novels/{id}(id=${novel.id})}" class="details">자세히
+					보기</a>
+				<div sec:authorize="hasAuthority('ROLE_ADMIN')">
+					<a th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit">수정</a>
+					<button type="button" class="delete" onclick="deleteNovel(event)"
+						th:data-id="${novel.id}">삭제</button>
+				</div>
+			</div>
+			<div class="extra-actions">
+				<a th:href="@{/chapters/{novelId}(novelId=${novel.id})}" class="button">회차 목록
+					보기</a> <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}"
+					sec:authorize="hasAuthority('ROLE_ADMIN')" class="admin-link">회차 추가</a>
+			</div></li>
+	</ul>
+
+
+
+
+
+
+	<div class="more-title">
+		<h2>조회순</h2>
+		<button type="button" class="btn-more" onclick="locationAction(event)"
+			th:href="@{/novels/popular/viewCountDesc}">더보기</button>
+	</div>
+	<ul class="novel-list">
+		<li th:each="novel : ${viewCountDescNovels}"><a
+			th:href="@{/novels/{id}(id=${novel.id})}"><img
+				th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}"></a>
+
+			<h2 th:text="${novel.title}"></h2>
+			<p th:text="${novel.category}"></p>
+			<div class="isPaid-view">
+				<span th:text="${novel.isPaid ? '유료' : '무료'}"
+					th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+				<span> <i class="fa fa-eye" title="조회수"
+					data-original-title="조회수"></i>&nbsp;<span
+					th:text="${novel.viewCount}"></span>
+				</span>
+			</div>
+			<div class="actions">
+				<a th:href="@{/novels/{id}(id=${novel.id})}" class="details">자세히
+					보기</a>
+				<div sec:authorize="hasAuthority('ROLE_ADMIN')">
+					<a th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit">수정</a>
+					<button type="button" class="delete" onclick="deleteNovel(event)"
+						th:data-id="${novel.id}">삭제</button>
+				</div>
+			</div>
+			<div class="extra-actions">
+				<a th:href="@{/chapters/{novelId}(novelId=${novel.id})}" class="button">회차 목록
+					보기</a> <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}"
+					sec:authorize="hasAuthority('ROLE_ADMIN')" class="admin-link">회차 추가</a>
+			</div></li>
+	</ul>
+
+
+	<!-- 페이징 -->
+	<div th:utext="${pagination}" style="margin-top: 50px"></div>
+
+
+
+
+	<!-- JAVA SCRIPT -->
+	<script src="/js/novels/novel-list.js"></script>
+
+	<!-- 페이지 이동 함수 -->
+	<script>
+		function locationAction(event) {
+			event.preventDefault();
+			const url = event.target.getAttribute('href');
+			window.location.href = url;
+		}
+	</script>
+</div>
+</html>

@@ -8,5 +8,15 @@
     "name": "iamport.secret",
     "type": "java.lang.String",
     "description": "A description for 'iamport.secret'"
+  },
+  {
+    "name": "file.upload-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'file.upload-dir'"
+  },
+  {
+    "name": "file.funding-upload-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'file.funding-upload-dir'"
   }
 ]}

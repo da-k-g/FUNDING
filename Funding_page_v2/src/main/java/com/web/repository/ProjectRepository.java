@@ -3,6 +3,7 @@ package com.web.repository;
 import com.web.domain.Project;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +17,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	    List<Project> findAllByOrderByStartDateAsc();
 	 @Query("SELECT p FROM Project p WHERE p.title LIKE %:title% ORDER BY p.startDate ASC")
 	    List<Project> findByTitleContaining(@Param("title") String title);
+	 @Query("SELECT p FROM Project p WHERE LOWER(TRIM(p.title)) = LOWER(TRIM(:title))")
+	 Optional<Project> findByTitleIgnoreCase(@Param("title") String title);
+
+
+	 
+
 }

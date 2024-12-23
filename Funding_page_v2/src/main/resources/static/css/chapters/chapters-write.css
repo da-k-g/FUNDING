@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+.novel-header {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.novel-header img {
+	max-width: 250px;
+	border-radius: 10px;
+}
+
+.form-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 30px;
+}
+
+.novel-header h2 {
+	font-size: 20px;
+}
+
+.chapters-title {
+	font-size: 1.6rem;
+	font-weight: bold;
+}
+
+.form-actions {
+	margin-top: 100px;
+	display: flex;
+    justify-content: flex-end;
+}

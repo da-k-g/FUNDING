@@ -1,0 +1,84 @@
+@charset "UTF-8";
+
+/* 전체 폼 스타일 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 20px;
+}
+
+/* 제목 스타일 */
+h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 라벨과 입력 필드 스타일 */
+label {
+    font-size: 1rem;
+    color: #555;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+input[type="number"] {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="number"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* 라디오 버튼 스타일 */
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+label[for="paymentMethod"], label[for="pointsMethod"] {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #333;
+    margin-right: 15px;
+}
+
+/* 버튼 스타일 */
+button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* 링크 스타일 */
+a {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #6f42c1;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #5a32a3;
+}

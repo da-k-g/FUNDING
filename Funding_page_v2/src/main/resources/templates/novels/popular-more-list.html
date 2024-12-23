@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">   
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인기소설 목록</title>
+    <link rel="stylesheet" href="/css/novels/novel-list.css" />
+</head>
+
+<div layout:fragment="content"  class="container">
+        <h1 th:text="${menuTitle}"></h1>  
+  
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">  
+        
+        <div class="register-button" sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <a href="/novels/new">소설 등록</a>
+        </div>
+	
+			<!-- 검색 및 정렬 컨테이너 -->
+			<div class="search-container">
+			    <form th:action="@{/novels/popular/{orderBy}(orderBy=${searchDTO.orderBy})}" method="get" class="search-form">
+
+			        <!-- 검색 인풋 -->
+			        <input type="search" name="searchQuery" th:value="${searchDTO.searchQuery}" 
+			               placeholder="검색어를 입력하세요" class="search-input"/>
+			
+			        <!-- 검색 버튼 -->
+			        <button type="submit" class="search-button">검색</button>
+			    </form>
+			</div>
+
+        <ul class="novel-list">
+            <li th:each="novel : ${novels}">
+                <a th:href="@{/novels/{id}(id=${novel.id})}"><img  th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}"></a>
+                
+                <h2 th:text="${novel.title}"></h2>
+                <p th:text="${novel.category}"></p>  
+                <div class="isPaid-view">              
+                	<span th:text="${novel.isPaid ? '유료' : '무료'}" th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+                	<span>
+                		<i class="fa fa-eye" title="조회수" data-original-title="조회수"></i>&nbsp;<span th:text="${novel.viewCount}"></span>
+                	</span>
+                </div>
+                <div class="actions" >
+                    <a th:href="@{/novels/{id}(id=${novel.id})}" class="details">자세히 보기</a>
+                    <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit">수정</a>
+                        <button type="button" class="delete" onclick="deleteNovel(event)" th:data-id="${novel.id}" >삭제</button>                        
+                    </div>
+                </div>
+                <div class="extra-actions">
+                    <a th:href="@{/chapters/{novelId}(novelId=${novel.id})}" class="button">회차 목록 보기</a>
+                    <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="admin-link">회차 추가</a>
+                </div>
+            </li>
+        </ul>
+		<!-- 페이징 -->
+		<div th:utext="${pagination}" style="margin-top: 50px"></div>
+			
+	<script  src="/js/novels/novel-list.js"></script>   
+
+</div>
+</html>

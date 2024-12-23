@@ -1,59 +1,16 @@
 package com.web.service;
 
-import com.web.domain.Like;
-import com.web.domain.Novel;
-import com.web.domain.User;
-import com.web.repository.LikeRepository;
-import com.web.repository.NovelRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.web.dto.LikeFormDTO;
+import com.web.dto.ResponseVoteDTO;
+/**
+ * 좋아요 및 비추천 관련 서비스 인터페이스
+ * - 소설에 대한 좋아요(추천) 및 비추천 상태를 업데이트하거나 조회
+ */
+public interface LikeService {
+	// 추천/비추천 상태 업데이트 
+	public ResponseVoteDTO updateLike(LikeFormDTO likesFormDTO);
+	// 특정 소설에 대한 추천/ 비추천 상태 조회
+	// - 사용자의 현채 추천/비추천 상태와 총 추천/비추천 수를 반환
+	public ResponseVoteDTO getVoteState(Long novelId, Long uid);
 
-import java.util.Optional;
-
-@Service
-public class LikeService {
-
-    @Autowired
-    private LikeRepository likeRepository;
-
-    @Autowired
-    private NovelRepository novelRepository;
-
- // 좋아요 추가 메서드 수정
-    public void addLike(User user, Long novelId) {
-        Novel novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid novel ID: " + novelId));
-
-        Optional<Like> existingLike = likeRepository.findByUserAndNovel(user, novel);
-        if (existingLike.isPresent()) {
-            throw new IllegalStateException("이미 누른좋아요."); // 메시지 명확히
-        }
-
-        Like like = new Like();
-        like.setNovel(novel);
-        like.setUser(user);
-        likeRepository.save(like);
-    }
-
-    // 좋아요 삭제 메서드 수정
-    public boolean removeLike(User user, Long novelId) {
-        Novel novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid novel ID"));
-
-        Optional<Like> existingLike = likeRepository.findByUserAndNovel(user, novel);
-        if (existingLike.isEmpty()) {
-            throw new IllegalStateException("이미 누른 싫어요."); // 메시지 명확히
-        }
-
-        likeRepository.delete(existingLike.get());
-        return true;
-    }
-
-
-    public long getLikeCount(Long novelId) {
-        Novel novel = novelRepository.findById(novelId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid novel ID: " + novelId));
-
-        return likeRepository.countByNovel(novel);
-    }
 }

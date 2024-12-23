@@ -1,33 +1,122 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">   
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>소설 목록</title>
+    <link rel="stylesheet" href="/css/novels/novel-list.css" />
 </head>
-<body>
-    <h1>소설 목록</h1>
-    <ul>
-        <li th:each="novel : ${novels}">
-            <a th:href="@{/novels/{id}(id=${novel.id})}" th:text="${novel.title}"></a> - 
-            <span th:text="${novel.category}"></span> - 
-            <span th:text="${novel.isPaid ? '유료' : '무료'}"></span>
-            <a th:href="@{/novels/modify/{id}(id=${novel.id})}">수정</a>
-            <form th:action="@{/novels/delete/{id}(id=${novel.id})}" method="post" style="display: inline;">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-                <button type="submit">삭제</button>
-            </form>
-            <!-- 회차 목록 보기 버튼 -->
-            <a th:href="@{/chapters/{novelId}(novelId=${novel.id})}">회차 목록 보기</a>
 
-            <!-- 회차 추가 버튼 -->
-            <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}">
-                <button type="button">회차 추가</button>
-            </a>
-        </li>
-    </ul>
+<div layout:fragment="content"  class="container">
+        <h1>소설 목록</h1>      
+        
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">  
+        <!-- 소설 등록 버튼은 admin권한이 있는 계정에서 만 보임-->
+        <div class="register-button" sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <a href="/novels/new">소설 등록</a>
+        </div>
+        
 
-    <!-- 소설 등록 버튼 -->
-    <button><a href="/novels/new">소설 등록</a></button>
-</body>
+			<!-- 검색 및 정렬 컨테이너 -->
+			<div class="search-container">
+			    <form th:action="@{/novels}" method="get" class="search-form">
+			        <!-- 정렬 드롭다운 -->
+			        <select name="orderBy" class="order-by-select" id="orderBy">
+			            <option value="createdDateDesc" th:selected="${#strings.equals(searchDTO.orderBy, 'createdDateDesc')}">등록일순</option>
+			            <option value="likeScoreDesc" th:selected="${#strings.equals(searchDTO.orderBy, 'likeScoreDesc')}">좋아요순</option>
+			            <option value="viewCountDesc" th:selected="${#strings.equals(searchDTO.orderBy, 'viewCountDesc')}">조회수순</option>
+			        </select>
+			
+			        <!-- 검색 필터 드롭다운 -->
+			        <select name="searchType" class="search-select">
+			            <option value="all" th:selected="${#strings.equals(searchDTO.searchType, 'all')}">전체</option>
+			            <option value="title" th:selected="${#strings.equals(searchDTO.searchType, 'title')}">제목</option>
+			            <option value="author" th:selected="${#strings.equals(searchDTO.searchType, 'author')}">저자</option>
+			            <option value="category" th:selected="${#strings.equals(searchDTO.searchType, 'category')}">카테고리</option>
+			        </select>
+			
+			        <!-- 검색 인풋 -->
+			        <input type="search" name="searchQuery" th:value="${searchDTO.searchQuery}" 
+			               placeholder="검색어를 입력하세요" class="search-input"/>
+			
+			        <!-- 검색 버튼 -->
+			        <button type="submit" class="search-button">검색</button>
+			    </form>
+			</div>
+
+
+		                
+<ul class="novel-list">
+    <!-- 소설 목록을 표시하는 리스트 -->
+    <li th:each="novel : ${novels}">
+        <!-- 각 소설 정보를 반복해서 렌더링 -->
+
+        <!-- 소설의 상세 페이지로 이동하는 링크와 표지 이미지 -->
+        <a th:href="@{/novels/{id}(id=${novel.id})}">
+            <img th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}">
+        </a>
+        
+        <!-- 소설 제목 -->
+        <h2 th:text="${novel.title}"></h2>
+
+        <!-- 소설 카테고리 -->
+        <p th:text="${novel.category}"></p>  
+
+        <!-- 유료/무료 여부와 조회수를 표시하는 섹션 -->
+        <div class="isPaid-view">              
+            <span th:text="${novel.isPaid ? '유료' : '무료'}" 
+                  th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}">
+                  <!-- 유료인 경우 '유료' 텍스트와 빨간색 클래스, 무료인 경우 '무료' 텍스트와 검정색 클래스 추가 -->
+            </span>
+            <span>
+                <!-- 조회수 아이콘과 조회수 표시 -->
+                <i class="fa fa-eye" title="조회수" data-original-title="조회수"></i>&nbsp;
+                <span th:text="${novel.viewCount}"></span>
+            </span>
+        </div>
+
+        <!-- 소설과 관련된 액션 버튼 섹션 -->
+        <div class="actions">
+            <!-- 자세히 보기 링크 -->
+            <a th:href="@{/novels/{id}(id=${novel.id})}" class="details">자세히 보기</a>
+
+            <!-- 관리자 권한이 있는 경우만 수정 및 삭제 버튼 표시 -->
+            <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit">수정</a>
+                <!-- 삭제 버튼, 삭제 이벤트와 연결 -->
+                <button type="button" class="delete" onclick="deleteNovel(event)" th:data-id="${novel.id}">삭제</button>                        
+            </div>
+        </div>
+
+        <!-- 추가 작업 버튼 섹션 -->
+        <div class="extra-actions">
+            <!-- 회차 목록 보기 -->
+            <a th:href="@{/chapters/{novelId}(novelId=${novel.id})}" class="button">회차 목록 보기</a>
+            <!-- 관리자 권한이 있는 경우 회차 추가 링크 표시 -->
+            <a th:href="@{/chapters/{novelId}/new(novelId=${novel.id})}" 
+               sec:authorize="hasAuthority('ROLE_ADMIN')" 
+               class="admin-link">회차 추가</a>
+        </div>
+    </li>
+</ul>
+
+
+	<!-- 페이징 -->
+		<div th:utext="${pagination}" style="margin-top: 50px"></div>
+			
+		
+
+	
+	<!-- java script 실행-->
+	<script  src="/js/novels/novel-list.js"></script>   
+
+</div>
+    
+    
+    
+    
+
 </html>

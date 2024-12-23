@@ -1,0 +1,90 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+body {
+	font-family: "Noto Sans KR", serif, 'Arial';
+	background-color: #f4f4f9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
+}
+
+.login-container {
+	background-color: #fff;
+	padding: 20px 30px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 400px;
+	text-align: center;
+}
+
+.login-container h1 {
+	font-size: 24px;
+	color: #333;
+	margin-bottom: 20px;
+}
+
+.login-container form {
+	display: flex;
+	flex-direction: column;
+}
+
+.form-group {
+	margin-bottom: 15px;
+	text-align: left;
+}
+
+.form-group label {
+	font-size: 14px;
+	color: #555;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.form-group input {
+	width: 100%;
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+.form-group input:focus {
+	border-color: #007bff;
+	outline: none;
+	box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+.login-container button {
+	background-color: #007bff;
+	color: white;
+	font-size: 16px;
+	padding: 10px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+	background-color: #0056b3;
+}
+
+.signup-link {
+	margin-top: 15px;
+	font-size: 14px;
+	color: #555;
+}
+
+.signup-link a {
+	color: #007bff;
+	text-decoration: none;
+}
+
+.signup-link a:hover {
+	text-decoration: underline;
+}

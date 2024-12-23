@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회차 목록</title>
+    <link rel="stylesheet" href="/css/novels/novel-list.css" /> <!-- 소설 리스트 스타일 -->
+  	<link rel="stylesheet" href="/css/chapters/chapters-list.css" /> <!-- 회차 리스트 스타일 -->
+  	<style>
+    .chapter-item {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        display: block;
+    }
+
+    .chapter-thumbnail-container {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .chapter-thumbnail {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+	.chapter-item img {
+       width: 550px; 
+       height: auto;
+	   border-radius: 8px;
+	  object-fit: cover;
+	}
+	
+    .chapter-details {
+        padding: 10px 0;
+    }
+
+    .chapter-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .chapter-title:hover {
+        text-decoration: underline;
+    }
+
+    .chapter-info {
+        margin: 15px 0;
+        font-size: 0.95rem;
+        color: #666;
+        
+        display:flex;
+        justify-content: space-evenly;
+    }
+
+    .chapter-info span {
+       /*  display: block; */
+        margin-bottom: 5px;
+    }
+
+    .chapter-status {
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    .chapter-status:before {
+        content: '• ';
+        color: #333;
+    }
+
+    .chapter-content {
+        margin-top: 15px;
+        line-height: 1.6;
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .chapter-content h4 {
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .chapter-content p {
+        margin: 0;
+    }
+</style>
+  	
+</head>
+
+<body>
+<div layout:fragment="content" class="container">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+    <!-- 소설 정보 -->
+    <div class="novel-container">
+        <a th:href="@{/novels/{id}(id=${novel.id})}">
+            <img th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}"  class="novel-cover">
+        </a>
+		<!-- 소설 상세 링크 -->
+        <div class="novel-main-list">
+            <p class="novel-title">
+                소설제목: <span th:text="${novel.title}"></span>
+            </p>
+
+            <p>
+                <span class="bold">카테고리 :</span> <span th:text="${novel.category}"></span>
+            </p>
+
+            <p>
+               <span class="bold"> 작가 :</span> <span th:text="${novel.author}"></span>
+            </p>
+            
+            <p>
+                 <span class="bold">내용 : </span>                
+    		 	<span th:text="${@htmlUtils.stripHtml(#strings.abbreviate(novel.description, 350))}"></span> <!-- HTML 태그 제거 및 350자 제한 -->
+            </p>
+
+			<!-- 유료 여부와 조회수 -->
+            <div class="isPaid-view">
+        
+               <span th:text="${novel.isPaid ? '유료' : '무료'}" class="bold" th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+               
+                
+                <span>
+                    <i class="fa fa-eye" title="조회수" data-original-title="조회수"></i>&nbsp;
+                    <span th:text="${novel.viewCount}"></span>
+                </span>
+                
+            </div>
+
+			<!-- 소설 관련 액션 -->
+            <div class="actions">
+            	<!-- 자세히 보기 버튼 -->
+                <button th:href="@{/novels/{id}(id=${novel.id})}" class="details" onclick="locationAction(event)">자세히 보기</button>
+                <!--  수정, 삭제 버튼은 ADMIN권한을 가진 아이디만 보임 -->
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <button type="button" th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit"  
+                    	onclick="locationAction(event)"                    	
+                    >수정</button>
+                    <button type="button" class="delete" onclick="deleteNovel(event)" th:data-id="${novel.id}">삭제</button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <h2  class="novel-title-h2"><span th:text="${novel.title}"></span></h2>
+
+    <!-- 회차 상세보기 -->
+    <div>
+        
+        
+        <div class="chapter-item" >
+		    <div class="chapter-thumbnail-container text-center">
+		        <img class="chapter-thumbnail" th:src="@{(${chapter.thumbnailImageUrl})}" 
+		             th:alt="${chapter.title}">
+		    </div>
+		
+		    <div class="chapter-details">
+		        <!-- 회차 제목 -->
+		        <a class="chapter-title" 
+		           th:href="@{/chapters/{id}(id=${chapter.id})}" 
+		           th:text="${chapter.title}"></a>
+		
+		        <!-- 회차 정보 -->
+		        <div class="chapter-info">
+		            <span>
+		                <i class="fa fa-eye" title="조회수"></i>&nbsp;
+		                조회수: <span th:text="${chapter.viewCount}"></span>
+		            </span>
+		            <span>
+		                등록일: <span th:text="${#temporals.format(chapter.createDate, 'yyyy-MM-dd')}"></span>
+		            </span>
+		   
+		                  
+		           <span th:text="${chapter.isPaid ? '유료' : '무료'}" class="bold" th:classappend="${chapter.isPaid ? 'text-red' : 'text-black'}"></span>      
+		        </div>
+		
+		        <!-- 내용 -->
+		        <div class="chapter-content">
+		            <h4>내용:</h4>
+		            <p th:utext="${chapter.content}"></p>
+		        </div>
+		    </div>
+		    
+		    
+		    <div style="margin-top: 50px;">
+		      <button type="button" onclick="history.back()" class="btn-success" style="padding: 11px 18px;">이전화면</button>
+		     </div>
+		</div>
+        
+        
+        
+        
+	        <!-- 목록이 비어 있는 경우 -->
+	    <div th:if="${#lists.isEmpty(chapter)}" class="no-chapters">
+	        <h2 class="text-center isEmpty">등록된 회차가 없습니다.</h2> <!-- 회차 없음 메세지 -->
+	    </div>
+    </div>
+
+
+	<!-- JAVA SCRIPT 파일 -->
+	<script  src="/js/chapters/chapters-list.js"></script>      
+	
+<!-- 페이징 이동 처리 함수 -->
+<script>
+    function locationAction(event) {
+        event.preventDefault();  
+        const url = event.target.getAttribute('href');  
+        window.location.href = url;
+    }
+</script>
+</div>
+
+</html>

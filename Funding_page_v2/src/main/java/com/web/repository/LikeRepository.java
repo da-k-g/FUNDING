@@ -1,30 +1,71 @@
 package com.web.repository;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.web.domain.Like;
 import com.web.domain.Novel;
 import com.web.domain.User;
+import com.web.domain.enums.VoteType;
+import com.web.dto.NovelUpvoteCountDTO;
+import com.web.dto.ResponseVoteDTO;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+/**
+ * Like 엔티티를 위한 Repository 인터페이스
+ * - 추천 및 비추천 관련 데이터 관리
+ */
+public interface LikeRepository extends JpaRepository<Like, Long> {
 
-import java.util.List;
-import java.util.Optional;
 
-public interface LikeRepository extends CrudRepository<Like, Long> {
+	  /**
+     * 소설별 추천/비추천 점수 합계를 계산하여 반환
+     * - 추천: +1
+     * - 비추천: -1
+     * - 0인 소설은 제외
+     * @param pageable 페이징 정보
+     * @return NovelUpvoteCountDTO의 페이지 객체
+     */
+	@Query("SELECT new com.web.dto.NovelUpvoteCountDTO(l.novel.id, " +
+		       "SUM(CASE WHEN l.voteType = com.web.domain.enums.VoteType.UP THEN 1 " +
+		       "         WHEN l.voteType = com.web.domain.enums.VoteType.DOWN THEN -1 " +
+		       "         ELSE 0 END)) " +
+		       "FROM Like l " +
+		       "GROUP BY l.novel.id " +
+		       "HAVING SUM(CASE WHEN l.voteType = com.web.domain.enums.VoteType.UP THEN 1 " +
+		       "               WHEN l.voteType = com.web.domain.enums.VoteType.DOWN THEN -1 " +
+		       "               ELSE 0 END) <> 0")
+		Page<NovelUpvoteCountDTO> countUpvotesMinusDownvotesPerNovelWithMin(Pageable pageable);
 
-    // 사용자와 소설로 특정 좋아요를 검색
-    Optional<Like> findByUserAndNovel(User user, Novel novel);
 
-    // 특정 소설의 좋아요 수를 카운트
-    Long countByNovel(Novel novel);
 
-    // 좋아요 수가 많은 순서대로 소설 목록을 검색
-    @Query("SELECT n FROM Novel n LEFT JOIN Like l ON n.id = l.novel.id " +
-           "GROUP BY n.id " +
-           "ORDER BY COUNT(DISTINCT l.id) DESC") // DISTINCT 추가로 중복 데이터 방지
-    List<Novel> findNovelsByLikes();
+	   
+    // 특정 소설과 사용자에 대한 추천/비추천 정보 조회
+    
+    Like findByNovelAndUser(Novel novel, User user);
 
-    // 중복 좋아요 확인 쿼리 (Optional 추가)
-    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = :userId AND l.novel.id = :novelId")
-    Long findDuplicateLikeCount(Long userId, Long novelId);
+   
+    // 특정 소설과 사용자, 추천 유형에 대한 데이터 존재 여부 확인
+    
+    @Query("SELECT count(l) FROM Like l WHERE l.novel.id = :novelId AND l.user.id = :userId AND l.voteType = :voteType")
+    Integer existsByNovelAndUserAndVoteType(@Param("novelId") Long novelId, @Param("userId") Long userId, @Param("voteType") VoteType voteType);
+
+    
+
+    // 특정 소설에 대한 추천 비추천 수 계산
+    @Query("SELECT new com.web.dto.ResponseVoteDTO(l.novel.id, " +
+            "SUM(CASE WHEN l.voteType = com.web.domain.enums.VoteType.UP THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN l.voteType = com.web.domain.enums.VoteType.DOWN THEN 1 ELSE 0 END)) " +
+            "FROM Like l " +
+            "GROUP BY l.novel.id " +
+            "HAVING l.novel.id = :novelId")
+    ResponseVoteDTO countUpvotesMinusDownvotesPerNovelWithMin(@Param("novelId") Long novelId);
+
+
+    
+  
+
 }

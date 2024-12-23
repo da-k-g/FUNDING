@@ -1,0 +1,167 @@
+@charset "UTF-8";
+
+/* 기본 설정 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 페이지 타이틀 */
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #f8b344;
+}
+
+/* Q&A 카드 */
+.qna-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    background-color: #fafafa;
+    transition: box-shadow 0.3s, transform 0.3s;
+    animation: slideUp 0.6s ease-in-out;
+}
+
+.qna-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}
+
+.qna-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.qna-title:hover {
+    color: #007BFF;
+}
+
+.qna-meta {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* 버튼 애니메이션 */
+.actions .btn-edit,
+.actions .btn-delete {
+    color: #fff;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-edit {
+    background-color: #6AA84F;
+}
+
+.btn-delete {
+    background-color: #E57373;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 페이지네이션 */
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.page-btn {
+    text-decoration: none;
+    color: black;
+    padding: 5px 10px;
+    border: 1px solid #f8b344;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.page-btn:hover {
+    background-color: #f8b344;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* 질문 작성 버튼 */
+.new-question-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.new-question-btn {
+    display: inline-block;
+    background-color: #f8b344;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    animation: pulse 1.5s infinite;
+    transition: transform 0.3s;
+}
+
+.new-question-btn:hover {
+    background-color: #e09c35;
+    transform: scale(1.05);
+}
+
+/* 애니메이션 키프레임 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(248, 179, 68, 0.6);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px 5px rgba(248, 179, 68, 0.8);
+    }
+}

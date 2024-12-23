@@ -1,0 +1,437 @@
+@charset "UTF-8";
+
+/* 전체 레이아웃 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 제목 스타일 */
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 캐러셀 스타일 */
+.banner-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.banner-wrapper {
+    display: flex;
+    transition: transform 1s ease-in-out;
+}
+
+.banner-item {
+    flex: 0 0 100%;
+    height: 400px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 비율 유지하며 채우기 */
+    border-radius: 10px;
+}
+
+.banner-text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+/* 캐러셀 컨트롤 버튼 */
+.banner-container button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    border-radius: 50%;
+}
+
+.banner-container .prev {
+    left: 20px;
+}
+
+.banner-container .next {
+    right: 20px;
+}
+
+.banner-container button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 소설 카드 스타일 */
+.novel-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.novel-list li {
+    flex: 0 0 calc(20% - 20px); /* 한 줄에 5개 */
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+    position: relative; /* 버튼 고정 위치를 위한 기준 */
+    height: 450px; /* 모든 카드 높이 동일하게 설정 */
+    display: flex;
+    flex-direction: column; /* 카드 내 아이템을 세로 정렬 */
+    justify-content: space-between; /* 콘텐츠와 버튼 사이 여백 균등 배치 */
+}
+
+/* 이미지 스타일 */
+.novel-list li img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+/* 제목과 추가 정보 */
+.novel-list li h2 {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* 추가 정보 스타일 */
+.isPaid-view {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin: 0 10px;
+}
+
+/* 버튼 컨테이너 스타일 */
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* 버튼 사이 간격 */
+    margin-bottom: 10px;
+}
+
+/* 버튼 스타일 */
+.actions a,
+.actions button {
+    display: inline-block;
+    width: 90px; /* 버튼 너비 고정 */
+    padding: 6px 0; /* 버튼 내부 여백 */
+    font-size: 0.8rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 버튼 색상 설정 */
+.details {
+    background-color: #28a745; /* 초록색 - 자세히 보기 */
+}
+
+.edit {
+    background-color: #007bff; /* 파란색 - 수정 */
+}
+
+.delete {
+    background-color: #dc3545; /* 빨간색 - 삭제 */
+}
+
+/* 캐러셀 이미지 */
+.banner-item img {
+    width: 100%;
+    height: 300px; /* 고정된 높이 */
+    object-fit: contain; /* 비율 유지하며 이미지 전체 표시 */
+    border-radius: 10px;
+}
+
+/* 소설 목록 이미지 */
+.novel-list li img {
+    width: 100%;
+    max-height: 200px; /* 최대 높이 */
+    object-fit: cover; /* 비율 유지하며 고정된 영역 채우기 */
+    border-radius: 8px 8px 0 0;
+    transition: transform 0.3s ease;
+}
+
+.novel-list li img:hover {
+    transform: scale(1.05); /* 호버 시 이미지 확대 */
+}
+
+
+.novel-list li h2 {
+    font-size: 1.25rem;
+    margin: 10px;
+    color: #444;
+    text-align: center;
+}
+
+.novel-list li p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 10px;
+}
+
+.isPaid-view {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 10px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.actions a, .actions button {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.actions a {
+    background-color: #4caf50;
+}
+
+.actions a:hover {
+    background-color: #388e3c;
+}
+
+.actions .edit {
+    background-color: #2196f3;
+}
+
+.actions .edit:hover {
+    background-color: #1769aa;
+}
+
+.actions .delete {
+    background-color: #f44336;
+}
+
+.actions .delete:hover {
+    background-color: #d32f2f;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination a {
+    display: block;
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active a {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.container {
+	width: 1080px;
+}
+
+.novel-list {
+	margin-top: 10px;
+}
+
+.more-title {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 100px;
+}
+
+.more-title h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+  /* 소설 목록 스타일 */
+    .novel-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: flex-start;
+        padding: 10px 0;
+        margin: 0;
+    }
+
+    /* 개별 소설 카드 스타일 */
+    .novel-list li {
+        flex: 0 0 calc(20% - 20px); /* 한 줄에 5개씩 배치 */
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        text-align: center;
+        padding: 10px;
+        margin: 0;
+    }
+
+    /* 이미지 스타일: 크기 통일 */
+    .novel-list li img {
+        width: 100%; /* 너비를 부모 요소에 맞춤 */
+        height: 300px; /* 고정된 높이 */
+        object-fit: cover; /* 비율 유지, 넘치는 부분 자르기 */
+        border-radius: 8px 8px 0 0;
+    }
+
+    /* 제목 스타일 */
+    .novel-list li h2 {
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+
+    /* 추가 정보 스타일 */
+    .isPaid-view {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+    }
+    
+     /* 버튼 컨테이너 스타일 */
+    .actions {
+        display: flex;
+        justify-content: center; /* 가운데 정렬 */
+        gap: 5px; /* 버튼 사이 간격 */
+        margin-top: 10px; /* 위 여백 */
+    }
+
+    /* 버튼 기본 스타일 */
+    .actions a,
+    .actions button {
+        display: inline-block;
+        padding: 3px 8px; /* 버튼 크기 조정 (작게) */
+        font-size: 0.8rem; /* 글자 크기 작게 설정 */
+        color: #fff; /* 글자색 */
+        border: none;
+        border-radius: 4px; /* 모서리 둥글게 */
+        text-decoration: none;
+        text-align: center; /* 글자를 가운데 정렬 */
+        line-height: 1.5; /* 텍스트 수직 정렬 개선 */
+        cursor: pointer;
+    }
+
+    /* 각 버튼 색상 설정 */
+    .details {
+        background-color: #28a745; /* 초록색 - 자세히 보기 */
+    }
+
+    .edit {
+        background-color: #007bff; /* 파란색 - 수정 */
+    }
+
+    .delete {
+        background-color: #dc3545; /* 빨간색 - 삭제 */
+    }
+
+    /* 호버 효과 */
+    .actions a:hover,
+    .actions button:hover {
+        opacity: 0.9; /* 마우스 오버 시 투명도 조절 */
+    }
+    .button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px; /* Rounded corners */
+	font-size:12px;
+    margin-right: 3px; /* Space between buttons */
+}
+
+.button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.admin-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px; /* Rounded corners */
+	font-size:12px;
+    margin-right: 3px; /* Space between buttons */
+    
+}
+
+.admin-link:hover {
+    text-decoration: underline;
+    color: white; /* Darker grey on hover */
+    background-color: #45a049
+}
+    
+

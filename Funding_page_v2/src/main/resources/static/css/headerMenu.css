@@ -1,0 +1,251 @@
+@charset "UTF-8";
+
+@font-face { font-family: 'TTTogether'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/TTTogetherA.woff') format('woff'); font-weight: normal; font-style: normal; }
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+/* 공통 레이아웃 스타일 */
+body {
+    margin: 0;
+    padding: 0;    
+    display:block !important; 
+    font-family: "Noto Sans KR", serif, 'Arial';
+}
+header{
+	 background: #ffffff;
+	 font-family: "Noto Sans KR", serif, 'Arial';
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 30px;
+  /*   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width:1280px;
+	margin: 0 auto;	
+	height: 120px;
+	box-sizing: border-box; /* 패딩과 보더를 포함한 너비 계산 */
+}
+
+
+
+/* 로고 스타일 */
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffa500;
+    text-decoration: none;
+}
+
+.navbar-brand img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.navbar-brand:hover {
+    color: #ff7700;
+}
+
+/* 네비게이션 메뉴 스타일 */
+.navbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 65px;
+}
+
+.nav-item {
+    list-style: none;
+}
+
+.nav-item .nav-link {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+    word-spacing:10px
+}
+
+.nav-item .nav-link:hover {
+    color: #ffa500;
+}
+
+/* 버튼 스타일 */
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-buttons .btn {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.nav-buttons .btn-signin {
+    background-color: #174c63;
+    color: white;
+}
+
+.nav-buttons .btn-signin:hover {
+    background-color: #226b8a;
+}
+
+.nav-buttons .btn-register {
+    background-color: #e6f4f1;
+    color: #174c63;
+}
+
+.nav-buttons .btn-register:hover {
+    background-color: #cde4e0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-nav {
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .nav-buttons {
+        margin-top: 10px;
+    }
+}
+
+main {
+    margin: 0 auto;
+    max-width:100%;
+    padding: 0px;
+}
+
+.toast-title{
+	margin-bottom: 10px;
+}
+
+.mt-2{
+	margin-top: 20px;
+}
+
+
+#topBtn {
+    text-decoration: none;
+    position: fixed;
+    bottom: 120px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    color: #4f8397;
+    box-shadow: 0 0 15px #4f839750;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .5);
+    text-align: center;
+    line-height: 58px !important;
+    font: normal 16px "TTTogether";     
+    text-transform: lowercase;
+    z-index: 9999; /* 포지션을 먼저 지정후 z-좌표(레이어) : 9999입니다. */ 
+    -webkit-transition: all .8s;
+    -moz-transition: all .8s;
+    -o-transition: all .8s;
+    transition: all .8s;
+      border: none;
+      cursor: pointer;
+      display: none;
+}
+ 
+#topBtn:hover {
+    color: #fff;
+    background: rgba(79, 131, 151, .7);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.text-center{
+	text-align: center;
+}
+
+.isEmpty{
+	padding: 30px;
+	font-size: 1.5rem;
+}
+
+
+.text-red {
+       color: red !important;
+   }
+.text-black {
+    color: black;
+}
+    
+    
+.btn-success{
+	background-color: #398711;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	text-decoration: none;
+	color: #fff;
+	margin: 0 10px;
+	padding: 13px 20px;
+	width: 100%;
+}
+
+
+
+.btn-success:hover {
+	background-color: #2c7606;
+	color: #fff;
+	text-decoration: none;
+	
+}
+
+
+.btn-more{
+	background-color: #398711;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	text-decoration: none;
+	color: #fff;
+	margin: 0 10px;
+	padding: 8px 21px;
+	
+}
+
+
+
+.btn-more:hover {
+	background-color: #2c7606;
+	color: #fff;
+	text-decoration: none;
+	
+}
+
+   
+    

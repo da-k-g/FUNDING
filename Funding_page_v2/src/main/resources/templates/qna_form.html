@@ -1,67 +1,30 @@
-
-
-
-
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
-<meta charset="UTF-8">
-<title>Q&A 등록</title>
-<style>
-    form {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-    }
-    label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-    input, textarea {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-    button {
-        padding: 10px 20px;
-        background-color: blue;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: darkblue;
-    }
-</style>
+	<link rel="stylesheet" th:href="@{/css/headerMenu.css}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
+    <link rel="stylesheet" th:href="@{/css/qna_form.css}" />
+	<meta charset="UTF-8">
+	<title>Q&A 등록</title>
 </head>
 <body>
-	<h1>질문 등록</h1>
-	<form action="/qna" method="post">
-    <label for="title">제목</label>
-    <input type="text" id="title" name="title" required>
+	<!-- 헤더 추가 -->
+    <div th:replace="~{fragments/header :: header}"></div>
+    
+    <div class="container">
+        <h1>질문 등록</h1>
+        <form action="/qna" method="post">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" required>
 
-    <label for="content">내용</label>
-    <textarea id="content" name="content" rows="5" required></textarea>
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="5" required></textarea>
 
-    <button type="submit">등록</button>
-</form>
-
+            <button type="submit">등록</button>
+        </form>
+    </div>
+    
+    <!-- 푸터 추가 -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

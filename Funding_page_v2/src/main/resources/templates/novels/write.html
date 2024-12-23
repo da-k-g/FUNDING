@@ -1,149 +1,94 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">  
+      
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>소설 등록</title>
+	<title>소설 등록</title>
+   <link rel="stylesheet" href="/css/novels/novel-write.css" />     
 </head>
-<style>
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f8f9fa;
-	margin: 0;
-	padding: 0;
-}
 
-.container {
-	max-width: 600px;
-	margin: 50px auto;
-	background: white;
-	padding: 20px;
-	border-radius: 8px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
 
-h1 {
-	text-align: center;
-	margin-bottom: 20px;
-	color: #343a40;
-}
 
-form div {
-	margin-bottom: 15px;
-}
+<div layout:fragment="content"  class="container">
+    <h1>소설 등록</h1>
 
-label {
-	font-weight: bold;
-	color: #495057;
-	display: block;
-	margin-bottom: 5px;
-}
 
-input[type="text"], textarea, select {
-	width: 100%;
-	padding: 10px;
-	font-size: 16px;
-	border: 1px solid #ced4da;
-	border-radius: 4px;
-	box-sizing: border-box;
-}
+    <!-- 유효성 검증 에러 메시지 -->
+    <div class="error-messages" th:if="${errors !=null}">
+      <ul>
+        <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+      </ul>
+    </div>
 
-textarea {
-	resize: none;
-	height: 120px;
-}
+    <!-- 소설 등록 폼 -->
+    <form action="/novels" method="post" enctype="multipart/form-data">
+      <!-- CSRF 토큰 -->
+      <input type="hidden" name="_csrf" th:value="${_csrf.token}" >
 
-button {
-	background-color: #007bff;
-	color: white;
-	border: none;
-	padding: 10px 15px;
-	font-size: 16px;
-	border-radius: 4px;
-	cursor: pointer;
-}
+      <!-- 제목 -->
+      <div>
+        <label for="title">소설 제목: </label>
+        <input type="text" id="title" name="title" th:value="${novelDTO.title}" maxlength="45" required>
+      </div>
 
-button:hover {
-	background-color: #0056b3;
-}
+      <!-- 작가 -->
+      <div>
+        <label for="author">작가: </label>
+        <input type="text" id="author" name="author" maxlength="20" required>
+      </div>
 
-.form-actions {
-	display: flex;
-	justify-content: space-between;
-}
 
-a {
-	text-decoration: none;
-	color: #007bff;
-	font-weight: bold;
-}
+      <!-- 카테고리 -->
+      <div>
+        <label for="category">카테고리: </label>
+        <input type="text" id="category" name="category" th:value="${novelDTO.category}" maxlength="45" required>
+      </div>
 
-a:hover {
-	text-decoration: underline;
-}
+      <!-- 설명(줄거리) -->
+      <div>
+        <label for="description">줄거리: </label>
+        <textarea id="description" name="description" th:text="${novelDTO.description}" required  ></textarea>
+      </div>
 
-.error-messages {
-	color: red;
-	margin-bottom: 20px;
-}
 
-.error-messages ul {
-	list-style-type: none;
-	padding: 0;
-}
-</style>
-<body>
-	<h1>소설 등록</h1>
-
-	<!-- 유효성 검증 에러 메시지 -->
-	<div th:if="${errors}">
-		<ul>
-			<li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
-		</ul>
-	</div>
-
-	<!-- 소설 등록 폼 -->
-	<form action="/novels" method="post">
-		<!-- CSRF 토큰 -->
-		<input type="hidden" name="_csrf" th:value="${_csrf.token}">
-
-		<!-- 제목 -->
-		<div>
-			<label for="title">소설 제목:</label> <input type="text" id="title"
-				name="title" th:value="${novel.title}" required>
-		</div>
-		<!-- 작가 -->
-		<div>
-			<label for="author">작가:</label> <input type="text" id="author"
-				name="author" required />
-		</div>
-		<!-- 카테고리 -->
-		<div>
-			<label for="category">카테고리:</label> <input type="text" id="category"
-				name="category" th:value="${novel.category}" required>
+      <!-- 유료 여부 -->
+ 		<div class="mt-2">
+		    <label for="paid">유료 여부: </label>
+		  		<select id="paid" name="paid" required>
+				  <option value="false" th:selected="!${novelDTO.paid}">무료</option>
+				  <option value="true" th:selected="${novelDTO.paid}">유료</option>
+				</select>
 		</div>
 
-		<!-- 설명(줄거리) -->
-		<div>
-			<label for="description">설명:</label>
-			<textarea id="description" name="description"
-				th:text="${novel.description}" required></textarea>
-		</div>
 
-		<!-- 유료 여부 -->
-		<div>
-			<label for="isPaid">유료 여부:</label> <select id="isPaid" name="isPaid"
-				th:value="${novel.isPaid}">
-				<option value="false" th:selected="!${novel.isPaid}">무료</option>
-				<option value="true" th:selected="${novel.isPaid}">유료</option>
-			</select>
-		</div>
+       <div>
+		  <label for="coverImage">표지 이미지: </label>
+		  <input type="file" id="coverImage" name="coverImage"  onchange="previewImage(event)" required>
+ 	  </div>
 
-		<!-- 등록 버튼 -->
-		<div>
-			<button type="submit">등록</button>
-			<a href="/novels">취소</a>
-		</div>
-	</form>
-</body>
+
+      <!-- 이미지 미리보기 -->
+      <div>
+        <img id="preview" src="" alt="Image Preview">
+      </div>
+
+
+      <!-- 버튼 -->
+      <div class="form-actions" style="margin-top: 100px">
+        <button type="submit" class="btn" >등록</button>
+        <a href="/novels" class="btn-default">취소</a>
+      </div>
+      
+      
+    </form>
+    
+    <!-- ckeditor 사용 -->
+    <script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script> 
+  	<script  th:src="@{/js/novels/novel-write.js}"></script>       
+</div>
+  
+
 </html>
+
+
