@@ -1,44 +1,176 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>로그인</title>
+<title>로그인</title>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+/* 기본 스타일 */
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	font-family: 'Raleway', sans-serif;
+}
+
+/* 메인 컨테이너 */
+.container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+/* 애니메이션 효과 */
+.container:hover .top:before, .container:hover .top:after, .container:hover .bottom:before,
+	.container:hover .bottom:after, .container:active .top:before,
+	.container:active .top:after, .container:active .bottom:before,
+	.container:active .bottom:after {
+	margin-left: 200px;
+	transform-origin: -200px 50%;
+	transition-delay: 0s;
+}
+
+.container:hover .center, .container:active .center {
+	opacity: 1;
+	transition-delay: 0.2s;
+}
+
+/* 상단 및 하단 배경 */
+.top:before, .top:after, .bottom:before, .bottom:after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 200vmax;
+	height: 200vmax;
+	top: 50%;
+	left: 50%;
+	margin-top: -100vmax;
+	transform-origin: 0 50%;
+	transition: all 0.5s cubic-bezier(0.445, 0.05, 0, 1);
+	z-index: 10;
+	opacity: 0.65;
+	transition-delay: 0.2s;
+}
+
+.top:before {
+	transform: rotate(45deg);
+	background: #e46569;
+}
+
+.top:after {
+	transform: rotate(135deg);
+	background: #ecaf81;
+}
+
+.bottom:before {
+	transform: rotate(-45deg);
+	background: #60b8d4;
+}
+
+.bottom:after {
+	transform: rotate(-135deg);
+	background: #3745b5;
+}
+
+/* 중앙 로그인 박스 */
+.center {
+	position: absolute;
+	width: 300px; /* 너비를 키움 */
+	padding: 20px; /* 내부 여백 확대 */
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	color: #333;
+	border-radius: 12px; /* 부드러운 모서리 */
+	opacity: 0;
+	transition: opacity 0.5s ease;
+}
+
+.center h2 {
+	font-size: 1.5rem; /* 제목 크기 확대 */
+	margin-bottom: 15px;
+}
+
+.center input {
+	width: 100%;
+	padding: 12px; /* 입력 필드 여백 확대 */
+	margin-bottom: 12px; /* 입력 필드 간격 확대 */
+	font-size: 1rem; /* 글자 크기 확대 */
+	border-radius: 8px; /* 부드러운 테두리 */
+	border: 1px solid #ccc;
+	transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.center input:focus {
+	outline: none;
+	border-color: #97D9E1;
+	box-shadow: 0 0 10px rgba(151, 217, 225, 0.5);
+}
+
+.btn-login {
+	width: 100%;
+	padding: 12px; /* 버튼 크기 확대 */
+	font-size: 1rem; /* 버튼 글자 크기 확대 */
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	background: linear-gradient(90deg, #97D9E1, #D9AFD9);
+	color: white;
+	cursor: pointer;
+	transition: box-shadow 0.3s ease;
+}
+
+.btn-login:hover {
+	box-shadow: 0 5px 15px rgba(151, 217, 225, 0.4);
+}
+
+.social-login {
+	display: flex;
+	justify-content: center;
+	gap: 10px; /* 버튼 간격 */
+	margin-top: 15px;
+}
+
+.social-login a img {
+	height: 32px; /* 소셜 로그인 아이콘 크기 */
+}
+</style>
 </head>
 <body>
-    <h1>로그인</h1>
-    <!-- 로그인 폼 -->
-    <form th:action="@{/perform_login}" method="post">
-        <!-- CSRF 토큰 -->
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+	<div class="container">
+		<!-- 상단 및 하단 애니메이션 -->
+		<div class="top"></div>
+		<div class="bottom"></div>
 
-        <!-- 사용자 입력 -->
-        <label for="username">이메일:</label>
-        <input type="text" id="username" name="username" placeholder="Email" required />
+		<!-- 로그인 박스 -->
+		<div class="center">
+			<h2>Please Sign In</h2>
+			<form th:action="@{/perform_login}" method="post">
+				<input type="email" name="username" placeholder="email" required />
+				<input type="password" name="password" placeholder="password"
+					required />
+				<button type="submit" class="btn-login">로그인</button>
+			</form>
 
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" name="password" placeholder="Password" required />
-
-        <button type="submit">로그인</button>
-    </form>
-
-    <!-- 에러 메시지 표시 -->
-    <div th:if="${param.error}">
-        <p style="color: red;">로그인에 실패했습니다. 이메일 또는 비밀번호를 확인하세요.</p>
-    </div>
-
-    <!-- OAuth2 로그인 버튼 -->
-    <div>
-        <a href="/oauth2/authorization/naver">
-            <button style="background-color: #03C75A; color: white; padding: 10px; border: none; border-radius: 5px;">
-                네이버로 로그인
-            </button>
-        </a>
-
-        <a href="/oauth2/authorization/kakao">
-            <button style="background-color: #FEE500; color: #3C1E1E; padding: 10px; border: none; border-radius: 5px;">
-                카카오로 로그인
-            </button>
-        </a>
-    </div>
+			<!-- 소셜 로그인 -->
+			<div class="social-login">
+				<a th:href="@{/oauth2/authorization/naver}"> <img
+					th:src="@{/images/naver-login.png}" alt="네이버 로그인" />
+				</a> <a th:href="@{/oauth2/authorization/kakao}"> <img
+					th:src="@{/images/kakao-login.png}" alt="카카오 로그인" />
+				</a>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

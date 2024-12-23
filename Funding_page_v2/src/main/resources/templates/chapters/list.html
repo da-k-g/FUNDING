@@ -1,42 +1,138 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">
+
+<!-- Thymeleaf와 Spring Security Layout Dialect를 사용하는 템플릿 -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회차 목록</title>
+    <!-- 페이지 제목 -->
+    <link rel="stylesheet" href="/css/novels/novel-list.css" /> <!-- 소설 리스트 스타일 -->
+    <link rel="stylesheet" href="/css/chapters/chapters-list.css" /> <!-- 회차 리스트 스타일 -->
 </head>
+
 <body>
-    <!-- 소설 제목 -->
-    <h1 th:text="'소설: ' + ${novel?.title}"></h1>
-    
-    <h2>회차 목록</h2>
+<div layout:fragment="content" class="container">
+    <!-- 콘텐츠 영역 -->
+
+    <!-- CSRF 토큰 -->
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+    <!-- 버튼 섹션 -->
+    <div style="margin-bottom: 20px; display: flex; justify-content: flex-end; align-items: center;">
+        <!-- 관리자만 볼 수 있는 회차 추가 버튼 -->
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <button type="button" onclick="locationAction(event)" th:href="@{/chapters/{novelId}/new(novelId=${novel?.id})}" class="btn-add">회차 추가</button>
+        </div>
+        <!-- 소설 목록으로 돌아가기 버튼 -->
+        <button type="button" th:href="@{/novels}" class="btn-list" onclick="locationAction(event)">소설 목록으로</button>
+    </div>
+
+    <!-- 소설 정보 -->
+    <div class="novel-container">
+        <!-- 소설 상세 보기 링크 -->
+        <a th:href="@{/novels/{id}(id=${novel.id})}">
+            <img th:src="@{(${novel.coverImageUrl})}" th:alt="${novel.title}" class="novel-cover">
+        </a>
+
+        <div class="novel-main-list">
+            <p class="novel-title">
+                소설제목: <span th:text="${novel.title}"></span>
+            </p>
+            <p>
+                <span class="bold">카테고리 :</span> <span th:text="${novel.category}"></span>
+            </p>
+            <p>
+                <span class="bold">작가 :</span> <span th:text="${novel.author}"></span>
+            </p>
+            <p>
+                <span class="bold">내용 :</span>
+                <!-- 소설 설명을 HTML 태그 제거 후 350자 제한 -->
+                <span th:text="${@htmlUtils.stripHtml(#strings.abbreviate(novel.description, 350))}"></span>
+            </p>
+
+            <div class="isPaid-view">
+                <!-- 유료/무료 여부 표시 -->
+                <span th:text="${novel.isPaid ? '유료' : '무료'}" th:classappend="${novel.isPaid ? 'text-red' : 'text-black'}"></span>
+                <!-- 조회수 -->
+                <span>
+                    <i class="fa fa-eye" title="조회수" data-original-title="조회수"></i>&nbsp;
+                    <span th:text="${novel.viewCount}"></span>
+                </span>
+            </div>
+
+            <div class="actions">
+                <!-- 자세히 보기 버튼 -->
+                <button th:href="@{/novels/{id}(id=${novel.id})}" class="details" onclick="locationAction(event)">자세히 보기</button>
+                <!-- 관리자 전용 수정 및 삭제 버튼 -->
+                <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <button type="button" th:href="@{/novels/modify/{id}(id=${novel.id})}" class="edit" onclick="locationAction(event)">수정</button>
+                    <button type="button" class="delete" onclick="deleteNovel(event)" th:data-id="${novel.id}">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 회차 목록 -->
-    <ul>
-        <!-- 회차가 비어 있는 경우 처리 -->
-        <li th:if="${#lists.isEmpty(chapters)}">등록된 회차가 없습니다.</li>
+    <h2 class="novel-title-h2">"<span th:text="${novel.title}"></span>" 목록</h2>
+    <div class="chapter-list">
+        <div class="chapter-item" th:each="chapter : ${chapters}">
+            <!-- 회차 이미지 및 제목 -->
+            <a th:href="@{/chapters/detail/{id}(id=${chapter.id})}">
+                <img th:src="@{(${chapter.thumbnailImageUrl})}" th:alt="${chapter.title}">
+            </a>
+            <div class="chapter-details">
+                <a class="chapter-title" th:href="@{/chapters/{id}(id=${chapter.id})}" th:text="${chapter.title}"></a>
+                <div class="chapter-info">
+                    <!-- 조회수 -->
+                    <span>
+                        조회수: <i class="fa fa-eye" title="조회수"></i>&nbsp;<span th:text="${chapter.viewCount}"></span>
+                    </span>
+                    <br>
+                    <!-- 등록일 -->
+                    <span>
+                        등록일 : <span th:text="${#temporals.format(chapter.createDate, 'yyyy-MM-dd')}"></span>
+                    </span>
+                    <br>
+                    <!-- 유료/무료 여부 -->
+                    <span th:text="${chapter.isPaid ? '유료' : '무료'}" th:classappend="${chapter.isPaid ? 'text-red' : 'text-black'}"></span>
+                </div>
+                <div class="actions">
+                    <!-- 회차 상세 보기 버튼 -->
+                    <button type="button" th:href="@{/chapters/detail/{id}(id=${chapter.id})}" onclick="locationAction(event)" class="details">자세히 보기</button>
+                    <!-- 관리자 전용 수정 및 삭제 버튼 -->
+                    <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <button th:href="@{/chapters/modify/{id}(id=${chapter.id})}" onclick="locationAction(event)" class="edit">수정</button>
+                        <button type="button" class="delete" onclick="deleteChapters(event)" th:data-id="${chapter.id}">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 목록이 비어 있는 경우 -->
+        <div th:if="${#lists.isEmpty(chapters)}" class="no-chapters">
+            <h2 class="text-center isEmpty">등록된 회차가 없습니다.</h2>
+        </div>
+    </div>
 
-        <!-- 회차가 있는 경우 처리 -->
-        <li th:each="chapter : ${chapters}">
-            <a th:text="${chapter?.title}">-</a>
-            <span th:text="${chapter?.isPaid ? '유료' : '무료'}"></span>
-            <form th:action="@{/chapters/delete/{id}(id=${chapter?.id})}" method="post" style="display: inline;">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
-                <button type="submit">삭제</button>
-            </form>
-        </li>
-    </ul>
+    <!-- 페이징 처리 -->
+    <div class="pagination" th:utext="${pagination}"></div>
 
-    <!-- 회차 추가 버튼 -->
-    <a th:href="@{/chapters/{novelId}/new(novelId=${novel?.id})}">
-        <button type="button">회차 추가</button>
-    </a>
+    <!-- JavaScript 파일 -->
+    <script src="/js/novels/novel-list.js"></script>
+    <script src="/js/chapters/chapters-list.js"></script>      
 
-    <!-- 수정 버튼 -->
-    <a th:if="${not #lists.isEmpty(chapters)}" 
-       th:href="@{/chapters/modify/{id}(id=${chapters[0]?.id})}">수정</a>
+    <script>
+        // 페이지 이동을 처리하는 함수
+        function locationAction(event) {
+            event.preventDefault();
+            const url = event.target.getAttribute('href');
+            window.location.href = url;
+        }
+    </script>
+</div>
 
-    <!-- 소설 목록으로 이동 -->
-    <a th:href="@{/novels}">소설 목록으로</a>
-</body>
 </html>

@@ -1,0 +1,134 @@
+@charset "UTF-8";
+
+body {
+	background-color: #f0f4f8;
+}
+
+.container {
+	max-width: 1280px;
+	margin: 50px auto;
+	background: #fff;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 25px;
+	font-size: 24px;
+	color: #333;
+}
+
+.error-messages {
+	background-color: #ffe6e6;
+	color: #b30000;
+	padding: 15px;
+	border: 1px solid #ff9999;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
+
+.error-messages ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: bold;
+	color: #555;
+}
+
+input[type="text"], textarea, select {
+	width: 100%;
+	padding: 12px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	margin-bottom: 15px;
+	box-sizing: border-box;
+	transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+	border-color: #007bff;
+	outline: none;
+}
+
+textarea {
+	resize: none;
+	height: 120px;
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+button {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+.btn-default{
+	background-color: #555;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	text-decoration: none;
+	color: #fff;
+	margin: 0 10px;
+	padding: 13px 20px;
+}
+
+
+
+.btn-default:hover {
+	background-color: #000;
+	color: #fff;
+	text-decoration: none;
+	
+}
+
+
+
+
+a {
+	color: #007bff;
+	text-decoration: none;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+a:hover {
+	color: #0056b3;
+	text-decoration: underline;
+}
+
+#preview{
+	display: none; 
+	max-width: 100px; 
+	margin-top: 10px;
+}
+
+.cke_notification.cke_notification_warning{
+	display: none;
+}

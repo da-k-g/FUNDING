@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout1}">   
 <head>
     <title>Funding</title>
   <style>
@@ -85,23 +88,27 @@
 </style>
 
 </head>
-<body>
-    <h1>Funding</h1>
-    <a href="/projects">펀딩 목록</a>
+
+<div layout:fragment="content"  class="container">
+    <!--<h1>Funding</h1>-->
+<!--     <a href="/projects">펀딩 목록</a>
     <a href="/projects/new">펀딩 등록</a>
-    <a href="/qna"> Q&A 목록 </a> <!-- QnA 목록으로 이동 -->
-    <a href="/qna/new">질문하기</a> <!-- QnA 작성 페이지로 이동 -->
+    <a href="/qna"> Q&A 목록 </a> QnA 목록으로 이동
+    <a href="/qna/new">질문하기</a> QnA 작성 페이지로 이동
     <a href="/logout">Logout</a>
-    <a href="/novels">소설</a>
+    <a href="/novels">소설</a> -->
 
     <!-- 최근 프로젝트 추가 -->
-    <h2>프로젝트</h2>
+   <!-- <h2>프로젝트</h2>-->
     <div class="container">
         <!-- 프로젝트 카드 렌더링 -->
         <div class="project-card" th:each="project : ${projects}">
-            <img th:src="@{${project.imagePath}}" alt="프로젝트 이미지">
-            <h3 th:text="${project.title}">프로젝트 제목</h3>
-            <a th:href="@{/projects/{id}(id=${project.id})}">상세 보기</a>
+            <!-- 이미지를 클릭하면 상세보기 페이지로 이동 -->
+            <a th:href="@{/projects/{id}(id=${project.id})}">
+                <img th:src="@{${project.imagePath}}" alt="프로젝트 이미지">
+            </a>
+            
+           
         </div>
     </div>
 
@@ -109,5 +116,6 @@
     <div class="more-btn">
         <a href="/projects">더보기</a>
     </div>
-</body>
+</div>
+
 </html>

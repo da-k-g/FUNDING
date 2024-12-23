@@ -1,30 +1,179 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<script src="/js/checkId.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
+/* 기본 스타일 */
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	font-family: 'Raleway', sans-serif;
+}
+
+/* 메인 컨테이너 */
+.container {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.container:hover .top:before, .container:hover .top:after, .container:hover .bottom:before,
+	.container:hover .bottom:after, .container:active .top:before,
+	.container:active .top:after, .container:active .bottom:before,
+	.container:active .bottom:after {
+	margin-left: 200px;
+	transform-origin: -200px 50%;
+	transition-delay: 0s;
+}
+
+.container:hover .center, .container:active .center {
+	opacity: 1;
+	transition-delay: 0.2s;
+}
+
+/* 상단 및 하단 배경 */
+.top:before, .top:after, .bottom:before, .bottom:after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 200vmax;
+	height: 200vmax;
+	top: 50%;
+	left: 50%;
+	margin-top: -100vmax;
+	transform-origin: 0 50%;
+	transition: all 0.5s cubic-bezier(0.445, 0.05, 0, 1);
+	z-index: 10;
+	opacity: 0.65;
+	transition-delay: 0.2s;
+}
+
+.top:before {
+	transform: rotate(45deg);
+	background: #e46569;
+}
+
+.top:after {
+	transform: rotate(135deg);
+	background: #ecaf81;
+}
+
+.bottom:before {
+	transform: rotate(-45deg);
+	background: #60b8d4;
+}
+
+.bottom:after {
+	transform: rotate(-135deg);
+	background: #3745b5;
+}
+
+/* 중앙 회원가입 박스 */
+.center {
+	position: absolute;
+	width: 240px; /* 너비 살짝 줄임 */
+	padding: 12px; /* 내부 여백 유지 */
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* 중앙 정렬 */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	color: #333;
+	border-radius: 8px;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+}
+
+.center h1 {
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.3rem; /* 타이틀 소폭 축소 */
+	font-weight: 700;
+	margin-bottom: 12px;
+}
+
+.center label {
+	font-family: 'Raleway', sans-serif;
+	align-self: flex-start;
+	font-size: 0.85rem; /* 라벨 글자 크기 유지 */
+	margin-bottom: 4px;
+	font-weight: 400;
+}
+
+.center input {
+	width: 100%;
+	padding: 8px; /* 입력 필드 여백 유지 */
+	margin-bottom: 8px;
+	font-size: 0.85rem;
+	font-family: 'Raleway', sans-serif;
+	border-radius: 6px; /* 필드 테두리 유지 */
+	border: 1px solid #ccc;
+	transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.center input:focus {
+	outline: none;
+	border-color: #97D9E1;
+	box-shadow: 0 0 10px rgba(151, 217, 225, 0.5);
+}
+
+button {
+	width: 100%;
+	padding: 8px;
+	font-size: 0.9rem;
+	font-weight: bold;
+	font-family: 'Raleway', sans-serif;
+	background: linear-gradient(90deg, #97D9E1, #D9AFD9);
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: box-shadow 0.3s ease;
+}
+
+button:hover {
+	box-shadow: 0 4px 8px rgba(151, 217, 225, 0.3);
+}
+</style>
 </head>
 <body>
-    <h1>회원가입</h1>
-    <form th:action="@{/signup}" th:object="${userForm}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        
-        <label for="username">아이디:</label>
-        <input type="text" id="username" th:field="*{username}" required />
-        <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p>
-        <br>
+	<div class="container">
+		<div class="top"></div>
+		<div class="bottom"></div>
+		<form class="center" th:action="@{/signup}" th:object="${userForm}"
+			method="post">
+			<h1>회원가입</h1>
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" /> <label for="username">아이디</label> <input
+				type="text" id="username" th:field="*{username}" required /> <input
+				type="button" id="userCheck" onclick="usernameCheck()" value="중복체크" />
+			<p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username
+				Error</p>
 
-        <label for="email">이메일:</label>
-        <input type="email" id="email" th:field="*{email}" required />
-        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p>
-        <br>
+			<label for="email">이메일</label> <input type="email" id="email"
+				th:field="*{email}" required />
+			<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email
+				Error</p>
 
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" th:field="*{password}" required />
-        <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p>
-        <br>
+			<label for="password">비밀번호</label> <input type="password"
+				id="password" th:field="*{password}" required />
+			<p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password
+				Error</p>
 
-        <button type="submit">회원가입</button>
-    </form>
+			<button type="submit">회원가입</button>
+		</form>
+	</div>
 </body>
 </html>

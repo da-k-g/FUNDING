@@ -1,32 +1,62 @@
 package com.web.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
+
+import com.web.domain.base.BaseTimeEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+
+// 소설의 회차 정보를 저장 하는 엔티티 클래스
+@Entity // 엔티티로 선언
 @Getter
 @Setter
-public class Chapter {
+@Builder // Builder 패턴을 위한 Lombok 어노테이션
+@NoArgsConstructor // 기본 생성자 생성
+@AllArgsConstructor // 모든 필드를 포함하는 생성자 생성
+public class Chapter extends BaseTimeEntity { // BaseTimeEntity를 상속받아 생성/수정 시간 자동 관리
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본 키와 자동 생성 전략 (AUTO_INCREMENT), 시퀀스 역활을 대신 해주고 있음
+    private Long id; // 회차 ID
 
-    @NotBlank(message = "제목은 필수 입력 값입니다.")
-    @Size(max = 255, message = "제목은 최대 255자까지 입력할 수 있습니다.")
-    private String title;
+    @Column(nullable = false) // 제목은 NULL이 불가능
+    private String title; // 회차 제목
 
-    @NotBlank(message = "내용은 필수 입력 값입니다.")
-    @Size(max = 2000, message = "내용은 최대 2000자까지 입력할 수 있습니다.")
-    @Column(length = 2000)
-    private String content;
+    @Lob // 대용량 텍스트 저장
+    private String content; // 회차 내용
 
+    @Column(name = "thumbnail_image_url") // DB 칼럼 이름 매핑
+    private String thumbnailImageUrl; // 회차 썸네일 이미지 경로
+    
+    @Column(name = "is_paid", nullable = false) // 무료/유료 여부
     private boolean isPaid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "novel_id", nullable = false)
-    private Novel novel;
+    
+    @ColumnDefault("0") // 기본 값 0 설정
+    @Column(name = "view_count", nullable = false)
+    private Integer viewCount=0; // 회차 조회수, 기본 값 0
+    
+    
+    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계 설정, 지연 로딩 사용
+    @JoinColumn(name = "novel_id", nullable = false) // 외래 키 설정 및 Not Null
+    private Novel novel; // 해당 회차가 속한 소설
+    
+ 
+
 }
+
+

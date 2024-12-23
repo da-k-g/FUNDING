@@ -28,10 +28,27 @@ public class SignupController {
     @PostMapping("/signup")
     public String signupSubmit(@Valid @ModelAttribute("userForm") UserDTO userForm,
                                BindingResult bindingResult) {
+             
+        if(userService.findByUsername(userForm.getUsername())!=null) {
+        	bindingResult.rejectValue("username", "error.userForm", "이미 등록된 아이디 입니다.");
+        	return "signup";
+        }
+        
+        if(userService.findByEmail(userForm.getEmail())!=null) {
+        	bindingResult.rejectValue("email", "error.userForm", "이미 등록된 이메일 입니다.");
+        	return "signup";
+        }
+        
         if (bindingResult.hasErrors()) {
             return "signup";
         }
+        
         userService.saveUser(userForm);
         return "redirect:/login";
     }
+    
+    
+    
+    
+    
 }

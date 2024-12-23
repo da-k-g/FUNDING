@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.domain.User;
+import com.web.domain.User.Role;
 import com.web.dto.UserDTO;
 import com.web.repository.UserRepository;
 
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole("USER");
+        user.setRole(Role.USER);
         userRepository.save(user);
     }
 
@@ -42,26 +43,24 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        System.out.println("User found: " + user.getEmail()); // 로그 추가
-        System.out.println("Password from DB: " + user.getPassword());
-        System.out.println("Encoded password: " + user.getPassword()); // 비밀번호 확인
-        System.out.println("Role: " + user.getRole()); // 역할 확인
-        String role = user.getRole().startsWith("ROLE_") ? user.getRole() : "ROLE_" + user.getRole();
-
-        
-        
         return new org.springframework.security.core.userdetails.User(
             user.getEmail(),
             user.getPassword(),
-            Collections.singletonList(new SimpleGrantedAuthority(role))
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
         );
     }
-    public void registerUser(User user) {
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElse(null); // Optional 처리, null 반환
     }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 
     
 }

@@ -1,28 +1,86 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<!-- Thymeleaf 템플릿 기반 HTML -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회차 추가</title>
+    <title>회차 추가</title> <!-- 페이지 제목 -->
+    <link rel="stylesheet" href="/css/novels/novel-write.css" /> <!-- 소설 작성 페이지 스타일 -->
+    <link rel="stylesheet" href="/css/chapters/chapters-write.css" /> <!-- 회차 작성 페이지 스타일 -->
 </head>
-<body>
-    <h1>회차 추가</h1>
-    <form th:action="@{/chapters/{novelId}/new(novelId=${chapter.novel.id})}" method="post">
-    <label for="title">제목:</label>
-    <input type="text" id="title" name="title" th:value="${chapter.title}" required />
-    <br>
 
-    <label for="content">내용:</label>
-    <textarea id="content" name="content" th:text="${chapter.content}" required></textarea>
-    <br>
+<div layout:fragment="content" class="container">
+    <!-- 메인 콘텐츠 영역 -->
 
-    <label for="isPaid">유료 여부:</label>
-    <input type="checkbox" id="isPaid" name="isPaid" th:checked="${chapter.isPaid}" />
-    <br>
+    <!-- 소설 정보 -->
+    <div class="novel-header">
+        <!-- 소설 상세 페이지 링크 -->
+        <a th:href="@{/novels/{id}(id=${novel.id})}">
+            <img th:src="${novel.coverImageUrl}" th:alt="${novel.title}"> <!-- 소설 표지 이미지 -->
+        </a>
+        <div>
+            <h2 th:text="${novel.title}"></h2> <!-- 소설 제목 -->
+        </div>
+    </div>
 
-    <button type="submit">추가</button>
-</form>
+    <h1 class="chapters-title">회차 추가</h1> <!-- 페이지 제목 -->
 
-    <a th:href="@{/chapters/{novelId}(novelId=${chapter.novel.id})}">목록으로 돌아가기</a>
-</body>
+    <!-- 유효성 검증 에러 메시지 -->
+    <div class="error-messages" th:if="${errors != null}">
+        <!-- 에러 메시지 목록 -->
+        <ul>
+            <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+        </ul>
+    </div>
+
+    <!-- 회차 등록 폼 -->
+    <form th:action="@{/chapters/{id}(id=${novel.id})}" method="post" enctype="multipart/form-data">
+        <!-- CSRF 토큰 -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+        <!-- 제목 입력 -->
+        <div>
+            <label for="title">회차 제목:</label>
+            <input type="text" id="title" name="title" th:value="${chapterDTO.title}" maxlength="45" required>
+        </div>
+
+        <!-- 설명(줄거리) 입력 -->
+        <div>
+            <label for="content">설명:</label>
+            <textarea id="content" name="content" th:text="${chapterDTO.content}" required></textarea>
+        </div>
+
+        <!-- 유료 여부 선택 -->
+        <div class="mt-2">
+            <label for="paid">유료 여부:</label>
+            <select id="paid" name="paid" required>
+                <option value="false" th:selected="!${chapterDTO.paid}">무료</option>
+                <option value="true" th:selected="${chapterDTO.paid}">유료</option>
+            </select>
+        </div>
+
+        <!-- 표지 이미지 업로드 -->
+        <div>
+            <label for="coverImage">표지 이미지:</label>
+            <input type="file" id="coverImage" name="coverImage" onchange="previewImage(event)" required>
+        </div>
+
+        <!-- 이미지 미리보기 -->
+        <div>
+            <img id="preview" src="" alt="Image Preview"> <!-- 업로드된 이미지 미리보기 -->
+        </div>
+
+        <!-- 폼 액션 버튼 -->
+        <div class="form-actions">
+            <button type="submit" class="btn">추가</button> <!-- 회차 추가 버튼 -->
+            <a th:href="@{/novels}" class="btn-default">목록으로 돌아가기</a> <!-- 소설 목록으로 돌아가기 -->
+        </div>
+    </form>
+
+    <!-- CKEditor -->
+    <script src="https://cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script> <!-- CKEditor 라이브러리 -->
+    <script th:src="@{/js/chapters/chapters-write.js}"></script> <!-- 회차 작성 관련 JavaScript -->
+</div>
+
 </html>

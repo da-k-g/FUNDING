@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<div class="header" th:fragment="header">
+   
+    	<a href="/" class="navbar-brand">
+            <!-- <img src="logo.png" alt="Logo"> --> <!-- 로고 이미지 -->
+            <span>Funding</span>
+        </a>
+        <nav>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a th:href="@{/projects}" class="nav-link">펀딩목록</a></li>
+                <li class="nav-item"><a th:href="@{/projects/new}" class="nav-link">펀딩등록</a></li>
+                <li class="nav-item"><a th:href="@{/qna}" class="nav-link">Q&A목록</a></li>
+        		<li class="nav-item"><a th:href="@{/points/charge}" class="nav-link">충전</a></li>
+                <li class="nav-item"><a th:href="@{/novels/popular}" class="nav-link">인기작품</a></li>
+                <li class="nav-item"><a th:href="@{/novels}" class="nav-link">웹소설</a></li>
+            </ul>
+        </nav>
+        <div class="nav-buttons">
+        	<li class="nav-item" sec:authorize="isAuthenticated()">
+        		<a class="btn btn-signin" th:href="@{/logout}" >로그아웃</a>
+        	</li>
+            
+           <li class="nav-item" sec:authorize="isAnonymous()">
+            	<a class="btn btn-signin"  th:href="@{/login}" >로그인</a>
+            	<a class="btn btn-register" th:href="@{/signup}" >화원가입</a>
+            </li>
+        </div>
+        
+</div>
+
+</html>
+

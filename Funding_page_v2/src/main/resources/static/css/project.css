@@ -1,0 +1,143 @@
+@charset "UTF-8";
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #222;
+    margin-top: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.search-form {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.search-form input[type="text"] {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+}
+
+.project-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.project-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* 이미지 비율 유지 */
+}
+
+.project-card-content {
+    padding: 15px;
+    text-align: left; /* 좌측 정렬 */
+}
+
+.project-card h3 a {
+    color: #222; /* 제목 검은색 */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.project-card h3 a:hover {
+    text-decoration: underline;
+    color: #007bff;
+}
+
+.project-card p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.progress-container {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #28a745;
+    transition: width 0.5s ease;
+}
+
+.pagination {
+    display: flex; /* 가로로 배치 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    list-style: none; /* 리스트 점 제거 */
+    padding: 0; /* 여백 제거 */
+    margin: 20px 0; /* 상단과 하단 여백 추가 */
+}
+
+.pagination li {
+    margin: 0 5px; /* 각 페이지 항목 간격 */
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    font-weight: bold;
+}
+

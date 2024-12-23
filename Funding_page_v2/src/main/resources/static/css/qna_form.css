@@ -1,0 +1,136 @@
+@charset "UTF-8";
+
+/* 기본 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* 컨테이너 */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* 제목 스타일 */
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    color: #f8b344;
+    margin-bottom: 20px;
+}
+
+/* 폼 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+input[type="text"], 
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #f8b344;
+    box-shadow: 0 0 5px rgba(248, 179, 68, 0.5);
+    outline: none;
+}
+
+/* 버튼 스타일 */
+button {
+    background-color: #f8b344;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #e89b28;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* 등록 버튼 */
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #f8b344;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+    cursor: pointer;
+    animation: pulse 1.5s infinite; /* 추가된 애니메이션 */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #e09c35; /* 진한 오렌지색으로 변경 */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 효과 */
+}
+
+/* 애니메이션 키프레임 */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(248, 179, 68, 0.6);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px 5px rgba(248, 179, 68, 0.8);
+    }
+}
+

@@ -1,9 +1,19 @@
 package com.web.dto;
 
+import com.web.domain.User;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
 
     @NotEmpty(message = "아이디는 필수 입력 값입니다.")
@@ -17,28 +27,32 @@ public class UserDTO {
     @Size(min = 6, message = "비밀번호는 최소 6자리 이상이어야 합니다.")
     private String password;
 
-    // Getters and Setters
-    public String getUsername() {
-        return username;
+    
+    
+    // UserDTO -> User 변환
+    public static User toEntity(UserDTO userDTO) {
+        if (userDTO == null) {
+            return null;
+        }
+
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    // User -> UserDTO 변환
+    public static UserDTO toDto(User user) {
+        if (user == null) {
+            return null;
+        }
 
-    public String getEmail() {
-        return email;
+        return UserDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(user.getPassword()) // 비밀번호는 보통 DTO에 포함되지 않음 (보안 문제)
+                .build();
     }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    
 }

@@ -1,0 +1,116 @@
+@charset "UTF-8";
+
+/* 전체 레이아웃 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 20px 0;
+    color: #222;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 컨테이너 스타일 */
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 라벨 스타일 */
+label {
+    display: block;
+    font-size: 1rem;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="file"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* 파일 업로드 커스텀 스타일 */
+input[type="file"] {
+    cursor: pointer;
+}
+
+/* 버튼 스타일 */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
+
+/* 링크 버튼 스타일 */
+div a {
+    display: inline-block;
+    color: #007bff;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+div a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    form {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}

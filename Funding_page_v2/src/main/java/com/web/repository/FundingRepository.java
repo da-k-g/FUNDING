@@ -7,3 +7,4 @@ import java.util.List;
 public interface FundingRepository extends JpaRepository<Funding, Long> {
     List<Funding> findByProject_ProjectId(Long projectId); // 수정된 쿼리 메서드
 }
+//SELECT * FROM funding f WHERE f.project_id = projectId;

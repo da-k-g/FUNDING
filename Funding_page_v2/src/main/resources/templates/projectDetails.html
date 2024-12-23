@@ -84,13 +84,13 @@
         <div class="image-container">
             <img th:src="@{${project.imagePath}}" alt="프로젝트 이미지">
         </div>
-
+	
         <!-- 프로젝트 세부 정보 -->
         <div class="details-container">
             <h1 th:text="${project.title}"></h1>
-            <p>Goal: <span th:text="${project.goal}"></span>원</p>
-            <p>Current Funding: <span th:text="${project.currentFunding}"></span>원</p>
-            <p>Created by: <span th:text="${project.createdBy}"></span></p>
+            <p>목표 금액: <span th:text="${project.goal}"></span>원</p>
+            <p>현재 금액: <span th:text="${project.currentFunding}"></span>원</p>
+            <p>창작자: <span th:text="${project.createdBy}"></span></p>
             <p>시작 날짜: <span th:text="${project.startDate}"></span></p>
             <p>종료 날짜: <span th:text="${project.endDate}"></span></p>
 
